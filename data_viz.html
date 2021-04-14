@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Vinh" />
+
+
+<title>Data Visualization</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<script src="site_libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+<link href="site_libs/wordcloud2-0.0.1/wordcloud.css" rel="stylesheet" />
+<script src="site_libs/wordcloud2-0.0.1/wordcloud2-all.js"></script>
+<script src="site_libs/wordcloud2-0.0.1/hover.js"></script>
+<script src="site_libs/wordcloud2-binding-0.2.1/wordcloud2.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-sm-12 col-md-4 col-lg-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-sm-12 col-md-8 col-lg-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="data_viz.html">Data Viz</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Data Visualization</h1>
+<h4 class="author">Vinh</h4>
+
+</div>
+
+
+<div id="visualize-amount" class="section level1">
+<h1>Visualize amount</h1>
+<div id="dot-plotlollipop-chart" class="section level2">
+<h2>Dot plot/lollipop chart</h2>
+<pre class="r"><code>library(tidyverse)
+library(ggforce)
+library(gapminder)
+library(ggridges)
+library(PASWR)
+library(tinter)
+library(fmsb)
+library(ggalt)
+library(cowplot)
+library(PASWR)
+library(RColorBrewer)
+library(Stat2Data)
+library(colorspace)
+library(reshape2)
+library(devtools)
+library(waffle)
+library(treemapify)
+library(zoo)
+
+text_color = &quot;#353d42&quot;
+caption_color = &quot;#666666&quot;
+font = &quot;Avenir Next&quot;</code></pre>
+<pre class="r"><code>gapminder_dot &lt;- gapminder %&gt;% 
+  filter(year == 2007, continent == &quot;Americas&quot;) %&gt;%
+  dplyr::select(country, lifeExp) %&gt;% 
+  mutate(country = fct_reorder(country, lifeExp),
+         mean_life = mean(lifeExp),
+         flag  = ifelse(lifeExp - mean_life &gt; 0, TRUE, FALSE))</code></pre>
+<div id="one-group" class="section level3">
+<h3>One group</h3>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-3-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="change-baseline" class="section level3">
+<h3>Change baseline</h3>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-4-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="dumbbell-chart" class="section level2">
+<h2>Dumbbell chart</h2>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-6-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="radar-chart" class="section level2">
+<h2>Radar chart</h2>
+<div id="one-observation" class="section level3">
+<h3>One observation</h3>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-8-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="multiple-observations-1" class="section level3">
+<h3>Multiple observations 1</h3>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-9-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="multiple-observations-2" class="section level3">
+<h3>Multiple observations 2</h3>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-10-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="compared-with-the-average" class="section level3">
+<h3>Compared with the average</h3>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-12-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="bar-plot" class="section level2">
+<h2>Bar plot</h2>
+<div id="vertical-bars" class="section level3">
+<h3>Vertical bars</h3>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-13-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="horizontal-bars" class="section level3">
+<h3>Horizontal bars</h3>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-14-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="grouped-bars" class="section level3">
+<h3>Grouped bars</h3>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-16-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="stacked-bars" class="section level3">
+<h3>Stacked Bars</h3>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-18-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="heatmap" class="section level2">
+<h2>Heatmap</h2>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-20-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="word-cloud" class="section level2">
+<h2>Word cloud</h2>
+<div id="htmlwidget-dcce969965edfe9f869a" style="width:100%;height:739.2px;" class="wordcloud2 html-widget"></div>
+<script type="application/json" data-for="htmlwidget-dcce969965edfe9f869a">{"x":{"word":["harry","—","”","stone","potter","ron","page","philosophers","’s","hagrid","hermione","’d","one","didn’t","know","got","like","get","looked","just","professor","see","around","“’s","going","dumbledore","now","think","’ve","never","time","something","don’t","harry’s","dudley","’ll","eyes","door","even","couldn’t","first","malfoy","head","looking","vernon","thought","two","right","next","told","people","neville","still","mcgonagall","way","face","room","yeh","’","will","quirrell","last","left","though","come","behind","turned","ter","wasn’t","came","gryffindor","boy","can","’m","much","house","heard","seemed","toward","want","little","went","long","suddenly","great","away","say","found","tell","really","made","bit","hand","trying","aunt","anything","tried","saw","hogwarts","knew","wand","put","well","good","voice","dark","took","three","let","asked","take","school","petunia","inside","old","yer","ever","dursley","hadn’t","must","day","open","find","quidditch","seen","things","cloak","might","another","pulled","“oh","front","keep","large","every","black","can’t","feet","make","hall","felt","wood","filch","lot","“’m","started","years","floor","almost","thing","“well","wouldn’t","end","everyone","fell","walked","night","air","“’ve","wanted","nothing","mind","sat","gone","table","mrs","called","enough","weasley","high","past","later","saying","quickly","magic","mirror","read","moment","slytherin","dursleys","sure","books","course","without","already","owl","second","“”","letter","points","always","bed","done","stop","hat","caught","onto","try","wizard","gave","across","stood","reached","outside","new","quite","wall","remember","kept","stared","better","hair","whispered","full","life","nearly","anyone","else","name","madam","top","fire","standing","ground","ask","whole","hands","man","small","window","getting","forward","coming","hear","side","percy","four","half","morning","“don’t","silver","best","along","forest","o’","train","fred","yes","mean","white","lost","broom","five","shouted","stopped","nose","ten","green","gold","talking","fer","hundred","big","noticed","someone","place","hard","father","red","happened","corridor","troll","work","suppose","mother","harry”","yet","taken","bad","many","dragon","“’re","everything","weren’t","minutes","sitting","robes","able","voldemort","holding","year","need","george","peeves","sight","light","funny","snapped","straight","move","cold","give","feeling","sort","broomstick","corner","except","help","passed","words","set","heart","use","giant","rest","match","cat","catch","finally","dudley’s","“harry","staring","won’t","arms","“’ll","round","began","empty","gringotts","students","book","team","hardly","reason","moved","nice","since","far","week","common","“yes","rather","believe","famous","world","dog","class","“now","trouble","either","note","blood","goyle","castle","street","watched","owls","pointed","legs","muttered","held","right”","knows","answer","family","mouth","noise","cupboard","fat","feel","stay","letters","library","dropped","pale","seven","twins","flamel","granger","quirrell’s","fluffy","drive","strange","together","dead","haven’t","isn’t","asleep","smiling","exactly","gasped","huge","fast","glass","gotten","parents","horrible","ceiling","cup","managed","speak","anyway","followed","send","crabbe","christmas","norbert","met","car","close","however","muggle","spoke","“’d","kill","turn","talk","opened","slowly","given","raised","hope","ran","wait","don’","unicorn","potter”","ron’s","forget","flitwick","neck","different","knocked","sorry","loudly","word","allowed","perhaps","watching","bright","woman","pointing","sound","taking","stepped","shook","game","leave","alone","somewhere","snake","making","brought","pleased","idea","cauldron","ollivander","quaffle","ronan","usual","sign","wearing","forgotten","realized","waiting","lay","sleep","heads","threw","disappeared","call","watch","now”","stand","arm","hagrid’s","telling","seat","pain","hut","safe","thousand","platform","privet","arrived","picked","walls","thinking","supposed","stupid","seem","muggles","maybe","pair","turning","near","wrong","pocket","times","twelve","understand","showed","used","chocolate","run","pushed","field","crowd","meet","became","gryffindors","seamus","ahead","sent","number","twice","also","yelled","home","instead","shoulder","know”","“good","start","piers","terrible","doors","died","shop","won","deep","breath","nine","wizards","follow","third","money","climbed","others","nimbus","play","chamber","neville’s","trees","break","snitch","sorcerer’s","bane","firenze","fingers","important","hurried","tiny","seconds","dear","sir","today","wondered","tea","lamp","glasses","eleven","lucky","liked","low","silence","sir”","bent","scar","dumbledore’s","swung","walking","kitchen","thick","leapt","running","go”","teachers","mail","friends","jumped","shut","“come","nearer","grounds","loud","please","learn","“just","potions","sudden","turban","portrait","hurt","flint","invisibility","expect","secret","sister","several","sky","soon","seized","point","afternoon","smile","wide","middle","evening","flying","direction","apart","angry","stuff","nasty","upstairs","tail","broken","bet","lose","dumbledore”","killed","late","carefully","pink","birthday","boys","paper","leg","hit","hour","body","worse","screamed","something”","shaking","us”","faces","’em","package","hogwarts”","cart","scared","spell","quietly","one”","toad","smiled","free","pile","nervous","brooms","added","nicolas","staircase","ghost","ages","fang","snape’s","tree","fact","obviously","buy","walk","happy","pull","“er","expected","dare","appeared","tall","beard","purple","albus","pomfrey","real","somehow","live","ready","wild","forehead","london","ball","playing","knees","quiet","case","grabbed","easy","“go","leaving","smell","heavy","lying","wondering","hagrid”","anythin’","powerful","hole","aren’t","flew","dragons","leaned","says","hufflepuff","show","hung","hedwig","charlie","scabbers","ears","practice","malfoy’s","path","eye","slytherins","classroom","guarding","crate","bludgers","hold","spent","potters","possible","gray","story","hoping","edge","finished","changed","o’clock","spotted","hundreds","explain","tonight","nervously","decided","crept","blue","sharp","shot","broke","odd","“yes”","cried","written","underneath","landed","minute","furiously","usually","rose","rolled","hidden","racing","questions","difficult","friend","listening","matter","families","fall","vernon’s","shock","coat","closer","nobody","glad","burst","line","listen","“look","foot","six","clearly","days","rock","steal","bottle","touch","witch","wands","worry","station","magical","“professor","hanging","key","griphook","ones","“hagrid","inches","clapped","goes","weasleys","brothers","lessons","hooch","norris","tower","fifty","normal","although","thin","fear","keeping","woke","chair","none","throwing","realize","jerked","single","bag","worried","learned","living","carrying","whether","kind","busy","slipped","nodded","may","less","known","size","balls","step","luck","happen","knowing","weeks","ago","pulling","stairs","question","egg","horror","mad","reminded","surprise","shouldn’t","bought","entrance","starting","windows","food","waved","carried","flat","breakfast","ear","earth","eat","agreed","chance","sofa","keys","“’","dad","sounded","mom","girl","outta","halloween","curse","remembered","expelled","row","barrier","leaky","narrow","interesting","cross","lee","miss","card","draco","doesn’t","joined","teacher","save","plant","clearing","bin","seeker","trapdoor","chess","leaves","son","noticing","young","probably","stars","tonight”","midnight","least","sit","gets","bowed","power","golden","baby","“hagrid”","wake","silent","presents","television","hated","needed","parcel","lady","boy”","laughed","relief","locked","wind","dangerous","hurry","slid","keeper","death","forbidden","holidays","water","stick","envelope","parchment","furious","fight","following","working","meant","pieces","knock","opposite","twin","storm","breaking","box","drew","teeth","afraid","job","ordinary","umbrella","lock","“yeah","“got","giving","steps","broomsticks","stuck","“can’t","back”","facing","potion","goblin","study","indeed","trunk","compartment","flavor","eating","ravenclaw","studying","footsteps","dormitory","hermione”","bloody","corridors","stands","bludger","exams","clothes","couple","sped","lots","mention","spot","whatever","dinner","whisper","lips","tight","careful","dursleys’","notice","care","person","name”","neither","true","swallowed","simply","cut","lit","dream","often","asking","crash","worth","suggested","change","snarled","cry","crying","warning","anything”","force","brown","sweater","wished","ice","rushed","wandering","“get","mistake","trembling","handed","sighed","alive","piece","damp","halfway","tomorrow","sea","boat","led","wooden","twenty","knocking","terrified","“ah","pockets","yeh”","interested","frog","wanting","faded","witches","die","“never","bottom","diagon","“give","school”","“see","twisted","marble","vault","passageway","hate","stool","nostrils","brother","laughing","“shut","prefect","loads","waving","charlie’s","frogs","hang","grass","malfoy”","sorting","win","covered","fly","invisible","branches","reflection","shows","stone”","lived","anywhere","road","shake","dressed","harder","angrily","clutching","grunted","stranger","news","yesterday","shocked","sharply","peered","awake","showing","slammed","swooped","silently","chuckled","clicked","darkness","seems","certainly","lemon","voldemort’s","sounding","pressed","sweets","surprised","underground","hissed","poor","shoulders","business","kicked","shall","murmured","bottles","yet”","bacon","rule","entered","newspaper","wants","become","jump","wrapped","visit","anyway”","safely","waited","sometimes","hours","flash","crossed","toilet","cake","tears","noses","smelting","notes","ignored","touched","stayed","ways","worked","drink","passing","dear”","fun","eh”","clean","easily","strode","yeh’ve","slightly","filled","hot","“everyone","shadows","wonder","jus’","growled","eagerly","roll","gotta","“don’","evil","needs","teach","truth","looks","seats","“can","shops","peering","“right","solid","quills","warned","finding","well”","lake","wing","piled","thousands","wizard’s","feather","higher","sparks","muttering","thinks","guard","desperate","packed","marched","neville”","brave","particularly","arts","must’ve","players","boats","lead","midair","properly","armor","dungeons","charms","lesson","homework","sprang","remembrall","jordan","threeheaded","attention","goal","rules","club","binoculars","dog’s","chessmen","figure","mysterious","drills","mustache","garden","drove","cats","excitedly","older","overhead","telephone","“sorry”","split","grin","shooting","cleared","yes”","fixed","nearest","completely","gently","drop","lily","mcgonagall’s","beneath","moving","way”","letter”","repeated","hiding","trust","place”","motorcycle","blankets","relieved","perfect","join","blew","special","computer","unless","favorite","pig","plates","rang","control","zoo","tired","hide","moaned","vanished","imagine","everybody","summer","training","laugh","bill","joke","grab","tap","crack","stomach","shelves","stretched","thrown","darkly","fighting","pack","speeding","howling","hasn’t","cheer","lumpy","shivered","doorway","summat","sausages","anymore","wonderful","gettin’","reckon","list","family”","’cause","wizarding","breathing","human","potter’s","goblins","clear","speed","ministry","clambered","history","ticket","hurrying","yeah","soft","scarlet","leading","smoke","“listen","pinned","father’s","bed”","soccer","houses","thanks","excellent","alley","king’s","platforms","board","youngest","ron”","panted","please”","floating","wish","beans","cakes","let’s","stunned","extra","names","lurking","losing","mountain","classes","return","ghosts","tables","cheers","laughter","gryffindor”","good”","finnigan","snape”","fallen","rid","wherever","“snape’s","hermione’s","dean","trouble”","dived","trophy","moonlight","backward","dragged","hoops","posts","chasers","feast","view","troll’s","cheering","erised","restricted","knight","flute","centaur","exam","perfectly","proud","thank","involved","useful","opinion","greatest","bear","happily","goodbye","blinked","town","strangely","nerve","struck","swooping","daylight","mood","upset","stare","celebrating","day”","imagining","everywhere","throat","mumbled","age","twitched","boots","pop","lights","fine","proper","frightened","james","gone”","true”","handkerchief","planets","bring","bringing","grew","trash","bundle","curiously","lightning","“yeah”","bike","wiping","neat","closed","meeting","voices","sun","brass","photographs","groaned","say”","“nothing","wore","barked","difference","eggs","meanwhile","year”","thirty","dudley”","figg","snowy","rat","pretending","putting","bald","short","gang","complained","complain","saturday","bits","slithering","tapped","winked","time”","boa","leaning","worst","collapsed","uniform","sticks","skin","faster","faint","possibly","forced","purpose","sick","miserably","explained","“see”","minds","clapping","wrist","“yeh","enormous","warmth","yeh’ll","abou’","nothin’","“stop","panic","lower","sank","mum","wizardry","term","exploded","shrieked","kid","mark","courage","carry","weak","somethin’","beaming","magic”","scrambled","coins","bronze","rob","miles","spells","halt","excitement","quirrell”","grinned","“three","archway","first”","mad”","somewhere”","chest","hurtled","helped","sorry”","excuse","slytherin”","fangs","feathers","bell","oak","tightly","see”","curious","plastic","ginny","prefects","whistle","captain","afford","impressed","quick","sandwiches","unwrapped","share","cards","dragon’s","becoming","team”","yell","bewitched","firs’","anxiously","glittering","pretty","teams","longbottom","barely","roast","headless","winning","warm","contact","bellowed","lines","filch’s","herbology","desk","believed","hospital","crossbow","delighted","handle","moment”","wood’s","done”","die”","squinting","speaking","sprinted","ropes","wings","saved","locker","marcus","“snape","flames","fluffy”","towering","section","can’t”","elixir","stone’s","lies","suggest","happening","screaming","eight","cheek","missed","peculiar","reading","map","tabby","cloaks","whispering","office","eyed","flooded","unusual","blame","stumbled","complete","rattled","hoped","stern","problems","birds","rain","early","casually","bathroom","bedroom","mixed","sparkling","distance","mcgonagall”","seeing","emerald","sniffed","everyone’s","bound","dedalus","years”","sideways","sweet","coldly","piercing","dead”","heavily","lent","shaped","bolt","knee","sobbed","shone","staying","sleeve","nodding","orange","beside","woken","fair","tape","counted","danger","unwrap","vernon”","adventure","hamburger","smelled","owned","house”","frantically","people’s","aside","christmas”","grown","fitted","punished","roof","received","crashed","crowded","animals","finish","sorts","“make","shuffled","constrictor","shout","hissing","brandy","wishing","sneaking","burning","dreamed","younger","merrily","september","“want","ickle","dirty","bowl","argue","dodged","rude","addressed","ink","stamp","yellow","ripped","writing","glancing","clutched","“let","roared","necks","quivering","wildly","shiny","squeezed","shortly","trip","downstairs","smallest","confused","plan","clock","squashy","lap","friday","amazement","fireplace","missing","hungry","gloomy","sheets","beat","perched","bobbing","icy","whipped","strongly","bags","fierce","crunching","warn","glinting","squeaked","“anyway","overcoat","gives","“yer","course”","thundered","anger","marks","braver","rage","headmaster","decide","horse","quill","folk","rats","myst’ry","incredible","friendly","vol","makes","dunno","kick","realizing","fool","poking","eyebrows","gamekeeper","tapping","fluttered","pay","didn’","wouldn’","yeh’d","shame","though”","gringotts”","manage","fudge","transfiguration","fungi","herbs","music","drinking","pipe","bartender","twitching","brilliant","brightly","cauldrons","plump","“look”","bat","floors","counter","flaming","impossible","rattling","passage","deeper","gonna","knuts","blinking","thirteen","“one","malkin’s","pick","mother’s","broom”","lives","ends","mean”","“nothing”","quidditch”","“better","mixture","rustling","cage","silvery","reflected","softly","phoenix","results","foolish","snatched","happens","packages","bite","“first","threequarters","“thank","excited","part","freckles","trunks","hairy","help”","“ron","“hey","blackhaired","flashed","rounded","flick","candy","bertie","bott’s","pumpkin","amazed","tore","really”","“gryffindor”","romania","mentioned","recognized","interest","extremely","“unless","eaten","among","glared","nerves","gliding","banquet","startterm","friar","answered","hufflepuffs","learning","means","unpleasant","“potter","doubt","plate","potatoes","peas","delicious","nicholas","championship","offered","deeply","peeves”","armchairs","spiral","curtains","struggled","look”","pass","threatening","movements","taught","toppled","rare","owlery","tut","“let’s","pairs","struggling","forest”","emptied","quicker","professor”","“keep","patil","sticking","streaked","dive","two”","oliver","dreams","severus","player","bathrobe","finds","petrified","suit","“students","flushed","snout","throw","protect","fluttering","months","girls’","hearts","baron","choice","desperately","bursting","lie","points”","unfortunately","“dunno","ajar","“thanks","drawing","angelina","chaser","johnson","blocked","possession","roughly","recent","cloak”","badly","suspected","distant","mirror”","werewolf","calm","hooded","norwegian","ridgeback","norbert”","detention","centaurs","cursed","devil’s","snare","queen","award","nonsense","spying","somebody","pretended","shuddered","starts","country","hummed","kiss","tantrum","backed","trick","order","driven","jam","traffic","silly","parking","concentrate","nighttime","dashed","stroked","worrying","building","violet","hugged","markings","determined","wife","normally","report","behaving","sleeping","weather","acting","promised","wet","armchair","lately","“funny","dared","“potter”","horribly","subject","statue","quiver","halfmoon","man’s","flicked","shape","ruffled","brick","dozen","impatiently","something’s","irritably","glance","drops","surely","admiring","calmly","powers","plain","trembled","examined","sense","jumping","firmly","wise","life”","pretend","rumbling","roar","bushy","leather","vast","climbing","muggles”","grip","sad","patting","laid","tucked","“well”","muffled","jacket","engine","astonishing","slept","scream","cousin","longer","blond","demanded","socks","punching","smaller","wear","bigger","knobbly","died”","questions”","counting","present","“oh”","video","camera","sixteen","figg’s","leap","blow","wailed","everything”","lord","backs","“honestly","problem","scar”","fit","kitchens","chasing","bank","roaring","gigantic","ideas","licking","scratching","bored","hitting","ate","cream","cool","lunch","reptile","ordered","tank","deafening","ribs","swiftly","strong","bitten","risk","strained","blinding","buying","shaken","escape","visited","biggest","sport","smeltings","stonewall","july","hats","gruffly","metal","stupid”","slot","doormat","postcard","belong","yellowish","address","lion","eagle","“hurry","checking","ill”","within","reach","goodness","croaked","keyhole","dangling","ignore","painful","“take","shelf","bitterly","mustn’t","stole","tearing","deliver","sides","•k","cheerfully","marmalade","spread","waist","wrenched","mutter","hotel","toast","wicked","slipping","sliding","whistled","reaching","minutes’","pause","frame","meself","rubbing","mind”","flickering","sunk","copper","kettle","teapot","sausage","wiped","shrank","bewildered","forbid","wizard”","sore","witchcraft","equipment","stammered","owl”","reminds","scribbled","beak","going”","blown","knowin’","happened”","sayin’","blimey","“nah","lookin’","takin’","’course","places","“maybe","village","sadly","ruined","fists","glaring","battered","failed","stumped","grow","grateful","name’s","swishing","dancing","trousers","keen","expelled”","sunlight","balloon","wave","peppermint","sleepily","nah","wizards’","mess","business”","proudly","vaults","daily","prophet","askin’","folded","firstyear","pewter","scales","slow","nowhere","buried","sold","record","“welcome","puffing","chairs","scraping","crockford","vampires","babble","apothecary","sickles","screech","towered","enter","earn","weighing","stones","glowing","closely","handing","downward","sloped","tracks","difficulty","fork","plunged","cost","colder","grubby","galleons","malkin","“hogwarts","fact”","robe","pin","drag","liking","setting","tries","sneer","suppose”","cheered","color","played","hufflepuff”","ago”","silk","enemies","ingredients","beautiful","ollivanders","spindly","strict","boxes","gloom","charm","favored","misty","finger","gripped","measure","crumpled","spots","whose","paid","month","mice","ticked","threequarters”","ruddy","talked","dry","lift","pushing","headed","“mom","oldest","joking","“excuse","jostled","wound","search","sigh","poked","“oy","sweaty","“thanks”","mom”","badge","guess","like”","gathered","glanced","“right”","blurted","moments","deal","enough”","fields","bars","pasties","modern","uses","alchemy","partner","bean","countryside","toadless","simple","weasley”","rise","events","sounds","flopped","shown","coolly","“say","mountains","echoed","beamed","steep","bend","fleet","smooth","cliff","toad”","shadow","fist","begin","sorted","awarded","whichever","test","glided","ruff","“hope","returned","candles","upward","rabbit","daring","wrestling","“hufflepuff”","definitely","chosen","girls","dean”","chicken","steak","interrupted","chat","nick","baron’s","treacle","gran","algie","ankles","sleepy","bounds","frowning","smiles","singing","yawning","dropping","coats","sweeping","chalk","wheezing","wednesday","sprout","binns","defense","fought","stuffed","effort","powdered","curled","stretching","dungeon","copying","boils","clouds","add","fang”","home”","“another","d’yeh","“rubbish”","refuse","duel","turns","rows","rising","sooner","parvati","“follow","cursing","delight","serious","pie","away”","“d’","“malfoy","nightmare","space","mistaking","growls","cared","temper","floor”","cheerful","handle”","confusion","obvious","stolen","bolted","score","jet","beaters","jaws","fourth","compared","dying","movement","skyward","“wingardium","slumped","lip","foul","shouting","“miss","“wonder","leg”","staffroom","matter”","means”","banner","immediately","spinnet","pucey","raising","snitch”","penalty","frightening","sobbing","“hermione","mine","snow","battle","library”","pince","belonged","“will","torn","gleaming","turkey","wine","recognize","ronald","“sir","pillow","referee","choked","“stay","dashing","pure","much”","choose","enchantments","thirdfloor","relax","breathe","forever","tallest","love","cover","hoarse","astronomy","especially","“mars","lowered","humans","needn’t","forgive","bishop","squares","mercy","logic","bravery","director","firm","grunnings","blonde","craning","neighbors","finer","dursley’s","mixing","child","dull","tuesday","cloudy","boring","flutter","tawny","chortled","“little","fashion","huddle","steering","weirdos","emeraldgreen","collecting","broad","calls","lunchtime","bun","group","bunch","uneasy","disturb","nephew","contrary","passersby","rooted","imagination","improve","unable","kent","oddly","yorkshire","promise","frozen","britain","cups","news”","stiffly","sinking","comforting","yawned","unblinkingly","popped","narrowed","swept","spectacles","crooked","rummaging","amuse","flickered","outer","square","drawn","stiff","feasts","parties","diggle","celebrate","precious","careless","downright","streets","drop”","fond","know’","persuade","voldemort”","confusing","noble","blushed","rumors","anxious","choosing","patted","heaven","numbers","“hagrid’s","“dumbledore","faintly","“really","seriously","boy’s","swelled","hid","motorcycle”","destroyed","visible","forever”","“hell","“couldn’t","scars","“even","shaggy","doorstep","twinkling","streaming","glowed","heel","swish","breeze","tidy","spend","prodded","hushed","lived”","kissed","rapped","screeched","frying","spiders","exercise","skinny","appearance","hair”","haircut","smoothly","wig","auntie","airplane","remote","games","ripping","vcr","“mrs","restaurants","paws","hates","slug","vacation","hopefully","cars","screwed","spoil","come”","gap","mothers","polkiss","scrawny","bangs","baggy","taped","revolting","wash","else’s","chimney","headmistress","subjects","remembering","sniggered","don’t”","dream”","sunny","creams","glory","afterward","crawling","poisonous","budge","knuckles","company","hammering","level","plainly","vigorously","jabbed","“dudley","howls","sworn","snap","miserable","memory","unknown","strangers","shopping","actually","vanish","punishment","escaping","ray","accepted","private","public","thanks”","sick”","tasted","knickerbockers","handsome","cracked","sink","tub","swimming","tightened","uniform”","wrinkled","banged","marge","surrounding","disgust","snorted","flipped","informed","“dad”","unfolding","mine”","sneered","porridge","choking","stuffing","slamming","write","shoes","mistake”","burned","bedroom”","toys","rifle","swapped","banging","straightened","gasping","fail","alarm","trodden","mouthful","nails","boarded","cracks","noises","post","ill","pelting","ducked","bouncing","whenever","blowing","beds","shared","windowsill","timidly","monday","count","shack","boat”","kindly","toothless","freezing","spray","rooms","chip","shriveled","privately","moldy","comfortable","drowned","hunger","rolls","lighted","boom","upright","stupidly","armed”","smash","mane","tangled","journey","lump”","“budge","crouching","shadowy","beetle","“las’","mom’s","mouse","mighta","taste","sticky","introduced","rubeus","grate","sagged","poker","chipped","worry”","gulp","“call","second”","stuff”","parents’","world”","dad”","famous”","“kept","gasp","whistling","owitchcraft","merlin","await","begins","tongue","clamped","muggle”","swore","rubbish”","married","“blown","crash”","scuttled","urgently","someone’s","everythin’","gulped","followers","nicer","“know","killin’","touches","orders","clenched","accept","beating","flattened","better”","codswallop","goin’","blazing","toads","warty","angry”","chased","dreading","ridiculous","rubbish","whirled","squeal","clasped","cast","reasons","tomorrow”","pockets”","attack","fiercely","humbugs","handful","tied","neither”","safest","“flew”","s’pposed","eager","land","enchantments”","guardin’","main","alone”","harbor","dragon”","money”","“still","gloves","copy","standard","emeric","guide","beasts","fantastic","crystal","telescope","london”","aloud","escalator","lined","parted","piles","pub","shabby","chatter","walnut","buckle","“bless","bar","welcome","proud”","“always","diggle’s","remembers","doris","“must","courtyard","quivered","wriggled","wider","“welcome”","stack","selfstirring","collapsible","liver","ounce","“dragon","eeylops","emporium","barn","fastest","selling","telescopes","barrels","stacked","moon","clever","upon","greed","seek","treasure","“like","stools","safe”","emptying","scattering","biscuits","importantly","thirteen”","crammed","trusted","’n","torches","twisting","billowing","sickle","gathering","“stand","melted","trapped","anyone’s","check","inside”","extraordinary","security","expecting","ride","pound","occasions","footstool","length","“hello”","drawling","crime","grinning","servant","drunk","slight","parents”","hopped","nuts","follows","rules”","sorta","postage","covers","curses","latest","dried","jars","roots","claws","horns","checked","present”","animal","wand”","peeling","dusty","depths","neatly","dust","prickled","afternoon”","moons","shining","blink","creepy","mahogany","chooses","yew","shuffling","arm”","measured","elbow","“every","substance","hairs","unicorns","measuring","heap","happier","holly","stream","laden","yerself","acted","quarters","“nine","paced","wheeled","attract","boys’","next”","“fred","george”","“sorry","briskly","platform”","okay”","express","drifted","chattering","hooted","disgruntled","roundfaced","“gran","lifted","raise","painfully","hand”","redhaired","twins’","nose”","jerk","percy”","striding","idea”","“hang","prefect”","“great","polite","“anyone","introduce","“harry”","else”","“wow”","already”","percy’s","bill’s","know’s","mars","tipped","pasty","collect","agrippa","picture","currently","defeat","grindelwald","discovery","enjoys","morgana","sidled","reckons","baked","coconut","nibble","keeps","talk”","bossy","family’s","century”","twentieth","whiskers","“voldemort”","explaining","children","bravely","picking","side”","scowling","jackets","slowed","“jus’","towers","sailed","flight","magnificent","ceremony","outstanding","waiting”","flatten","“please","houses”","joking”","jolt","streamed","pearlywhite","arguing","students”","floated","form","double","imagined","splendid","dotted","mainly","heavens","rip","sing","sleek","dwell","applause","song","troll”","hannah","ravenclaws","sandyhaired","seamus”","jammed","jog","“path”","whispers","fires","shakily","loudest","earlier","bucket","taller","uncertainly","genius","chops","boiled","gravy","pudding","ketchup","tower”","“nearly","coughed","ghost”","blank","desserts","trifle","tart","’til","accidentally","matches","needles","goblet","greasy","hooknosed","teacher’s","fed","caretaker","least”","snakelike","bare","brains","crowds","portraits","staircases","“peeves”","firsties","zooming","reveal","cozy","pajamas","hangings","heavier","master","classrooms","wastepaper","bulging","creature","lamplike","passageways","ambition","dates","squeak","messing","changing","complicated","garlic","zombie","insisted","sugar","favors","circling","untidy","borrowed","paused","calling","gift","bewitching","creep","senses","fame","speech","asphodel","infusion","root","bezoar","faintest","monkshood","seamus’s","fire”","spat","push","spirits","“back","boarhound","boiling","massive","letting","bounded","enjoying","puts","continue","searched","date","thursday","stories","thomas","exciting","dean’s","ham","west","grandmother","accidents","“malfoy’s","hawk","angles","twigs","granger’s","steady","falling","slip","thud","wham","facedown","earshot","longbottom”","darting","glittered","nastily","tree”","“ivo”","“madam","pounding","mounted","soared","joy","rush","screams","gasps","speechless","fault","lasted","packing","borrow","seeker”","expression","natural","clue","“didn’t","“ever","“wood","week”","secret”","“bet","meal","wheeling","“midnight","damage","peace","advice","block","faceface","bathrobes","hunched","interfering","late”","breathed","minute”","scrambling","bogies","flitted","edged","madly","gallery","tripped","crashing","doorknob","paces","cackled","naughty","corridor”","ducking","“quick","okay","monstrous","rolling","mouths","seventh","snout”","protection","clues","session","glee","thousand”","broomstick”","twig","bubbles","chasers”","score”","straining","zigzagging","open”","wins","seekers","understood","shutting","golf","england","announced","leviosal”","wrong”","sleeves","hovered","honestly”","startled","decorations","stutter","helping","sprinting","askew","terror","dormitories","groups","directions","teachers”","fading","patch","victory","hesitated","run”","driving","sickening","swayed","racket","rear","fury","“five","admitted","noisy","embarrassed","moleskin","jar","guilty","limped","hurting","breathlessly","guarding”","president","performed","tricky","colors","women”","refereeing","blast","fifteen","“jordan”","reserve","adrian","“bin","somethin’”","scored","feelings","possession”","“slytherin","higgs","yelling","card”","disgusting","buck","direct","passes","interfere","clamber","“neville","clap","seventy","sixty","student","concern","signed","“tell","spectacular","trailing","flatly","flamel’s","century","discoveries","developments","titles","wandered","grandfather","“merry","contained","sweater”","maroon”","unwrapping","material","flung","sharing","rich","crackers","feeble","party","cloud","chuckling","redder","luminous","nagging","bother","shriek","shrieks","desks","carved","oyt","reflections","touching","hungrily","odd”","feared","moaning","transfixed","insides","invisible”","desire","men","prepared","socks”","convinced","nightmares","skimming","overtake","fewer","around”","spluttered","fault”","play”","leglocker","bunny","countercurse","urged","d’","grumpily","flamel”","ancient","concerned","drinker","perenelle","practicing","school’s","whirl","shoot","erupted","hugging","nearby","stuttering","beast","lie”","won”","antidark","schedules","crazy","“shhhh”","thoughtfully","breeding","stoat","bush","soul","drinks","feed","diff’rent","illegal","mommy”","drained","norbert’s","remember”","“brilliant”","state","believes","saturday”","sweat","teddy","heaved","easier","flared","thrashing","brain","creeping","detentions","ashamed","comfort","hero","suffering","sure”","sacked","werewolves","heard”","cracking","winding","inter","killing","creatures","listened","wasn’","grimly","ronan”","“never”","hooves","dense","idiot","galloping","pawed","best”","unicorn”","strength","examine","times”","night’s","surprises","papers","snuffbox","invented","drink”","horrified","important”","caution","bothered","trevor","waste","“neville”","loosening","will”","playing”","landing","“lucky","moving”","breathe”","room”","decoration”","soaring","darted","knack","“ready”","chess”","king","instant","onward","nettle","poison","trolls","binding","“master","“seize","blistering","agony","deadly","“quirrell","delayed","therefore","“alas","loved","serpent","summer”","gateway","beefy","amount","fences","discover","goodnothing","husband","undursleyish","tie","gossiped","wrestled","briefcase","pecked","cereal","tyke”","four’s","maps","signs","getups","drummed","wheel","enraged","stunt","ninth","gazed","openmouthed","owlfree","stretch","bakery","baker’s","tin","doughnut","whisperers","secretary","dialing","receiver","harold","harvey","squeaky","rejoice","approve","driveway","“shoo”","behavior","door’s","daughter","act","“won’t”","birdwatchers","reported","nation’s","hunt","unusually","sightings","experts","sunrise","newscaster","pattern”","jim","mcguffin","jim”","showers","ted”","weatherman","viewers","dundee","phoning","downpour","bonfire","folks","“owls","funnylooking","crowd”","pursed","sipped","howard","agree”","related","affect","drifting","sleepiness","cat’s","judging","belt","tuck","buckled","highheeled","unwelcome","known”","cigarette","lighter","putouter","pinpricks","beadyeyed","pavement","“fancy","severelooking","distinctly","stiffly”","livingroom","flocks","sense”","rumors”","swapping","thankful","sensible","flinched","unsticking","haven’t”","exasperated","flatter","“voldemort","earmuffs”","discuss","“everyone”","saying”","godric’s","hollow","rumor","“lily","potters’","glumly","faltered","astounding","survive”","guess”","lace","dabbed","sniff","places”","kicking","legend","future","“exactly”","growing","grudgingly","tend","louder","steadily","headlight","astride","tangles","lids","dolphins","muscular","“borrowed","sirius","“young","swarmin’","bristol”","flyin’","jetblack","tuft","handy","scratchy","howl","whiskery","wounded","“shhh”","“sssorry”","burying","found”","gingerly","celebrations”","’night","reply","lamps","slinking","hedges","inky","waking","hours’","milk","pinched","vanashig","gardens","fateful","mantelpiece","beach","pictures","bonnets","differentcolored","riding","bicycle","carousel","shrill","pan","stove","“nearly”","burn","birthday”","duddy’s","spider","mystery","skinnier","scotch","punched","“comb","greeting","haircuts","watery","angel","“thirtysix”","marge’s","“darling","mommy","daddy”","thirtyseven","wolfing","scented","popkin","sweetums”","“thirtynine","money’s","tyke","’atta","wristwatch","“bad","parks","movies","cabbage","planned","tibbies","tufty","marge”","phone","’sname","yvonne”","majorca”","ruins”","zoo”","duddydums","mummy","“dinky","flinging","sobs","spoils","doorbell","barbers","scissors","sleepless","sheared","puff","puppet","shrunk","buildings","cans","midjump","spending","cabbagesmelling","council","motorcycles","hoodlums”","maniacs","overtook","flying”","beet","dont","fly”","“motorcycles","cartoon","van","cheap","gorilla","remarkably","hobby","restaurant","knickerbocker","lizards","snakes","cobras","mancrushing","pythons","largest","crushed","coils","glistening","move”","whined","smartly","snoozed","boring”","intently","boredom","drumming","visitor","beady","annoying”","brazil","bred","specimen","brazil”","wont","waddling","concrete","constrictor’s","rapidly","uncoiling","throughout","exits","“brazil","amigo”","thanksss","glass”","apologized","gibber","heels","playfully","swearing","squeeze","calming","meals”","vision","relation","wildlooking","bus","weirdest","disagree","brazilian","earned","longestever","crutches","dennis","gordon","malcolm","leader","stupidest","hunting","secondary","local","stonewall”","practice”","toilet’s","tripping","paraded","brandnew","maroon","tailcoats","boaters","straw","proudest","dudleykins","rags","wet”","dyeing","finished”","doubted","elephant","click","flop","“poke","isle","vacationing","wight","twanging","band","elastic","relatives","whinging","surrey","bearing","seal","wax","badger","bombs”","“ate","“marge’s","whelk","“dad","snatch","grayish","“pppetunia”","“vernon","seeming","scruffs","promptly","“vernon”","sleeps","“watching","pacing","swear","nonsense”","“silence”","breaths","bedrooms","visitors","monthold","neighbor’s","firstever","canceled","program","birdcage","parrot","bawling","whacked","tortoise","greenhouse","‘mr","strangled","wrestle","wheezed","repaired","postman","hammered","“aaaaarrrgh","uncle’s","nailed","peoples","nail","fruitcake","slotted","hammer","“tiptoe","tulips”","twentyfour","milkman","dairy","shredded","processor","badly”","sunday","sundays”","newspapers","damn","whizzing","forty","bullets","tufts","arguments”","highway","sniffling","sports","“shake","nightfall","programs","alien","city","outskirts","musty","snored","cornflakes","stale","tinned","tomatoes","owner","’scuse","desk”","’undred","railview","cokeworth","dining","“wouldn’t","plowed","bridge","suspension","garage","multilevel","“daddy’s","dully","coast","parked","sniveled","monday”","humberto’s","television”","eleventh","birthdays","hanger","“found","certain","forecast","“storm","gleefully","gentleman’s","lend","ambling","rowboat","irongray","rations”","aboard”","chilly","gaps","seaweed","chips","rations","bananas","smoked","splattered","waves","filthy","motheaten","curl","softest","blanket","ragged","thinnest","ferociously","raged","snores","thunder","dial","tick","writer","creak","warmer","slapping","crumbling","annoy","cannon”","skidding","hinges","beetles","stooping","brushed","crinkled","baby”","eyes”","rasping","demand","entering”","prune”","gun","knot","rubber","squashed","icing","“true","stronger","bath","weight","amber","mugs","liquid","swig","sizzling","burnt","juicy","fidgeted","fattenin’","puddin’","cryin’","fill","cowering","things”","math","explode","boomed","“dursley”","“mimblewimble”","fixing","commanded","“stop”","quailed","syllable","boil","good’un","thumpin’","trained","hutrock","chf","grand","confed","international","mugwump","supreme","warlock","inform","enclosed","necessary","sincerely","minerva","deputy","fireworks","gorgons","“gallopin’","ruffledlooking","upside","weather’s","ashenfaced","firelight","nonmagic","“swore","indeed”","knew”","“knew","“knew”","dratted","spawn","teacups","freak","draw","ranting","abnormal","“car","outrage","scandal","knowin’”","parts","gargoyles","“gulpin’","foghorn","bones","mckinnons","prewetts","cruel","“took","tosh”","“load","cured","denying","world’s","types","sword","speared","bearded","bidin’","kinda","trances","cornin’","respect","clouted","bullied","defeated","sorcerer","football","revenge","positively","“haven’t","born","finest","youngsters","dumbled","crackpot","paying","tricks”","insult","“—","firecracker","curly","pig’s","ruefully","temper”","“shouldn’ta","speakin’","strictly","“gotta","kip","dormice","wriggles","ally","cupboard”","claw","rapping","swelling","savaging","“pay","deliverin’","payin’","bunches","pellets","string","teabags","strangelooking","knuts”","“knuts”","ones”","pouch","“best","puncture","“urn","“mm”","“d’yeh","teh","banks”","“wizards","goblins”","“goblins”","’cept","fetchin’","gleamed","hired","settled","“seems","mentionin’","“spells","highsecurity","tryin’","summat”","messin’","usual”","“ministry","’course”","minister","bungler","cornelius","pelts","advice”","country”","wantin’","solutions","bumped","meters","panting","“crikey","“wanted","“muggle","bills","tickets","knitting","canaryyellow","circus","tent","stitches","“good”","need”","unfolded","require","sets","protective","similar","fastenings","winter","pupils’","tags","grade","miranda","goshawk","bagshot","bathilda","adalbert","theory","waffling","beginners’","switch","phyllida","spore","arsenius","drafts","jigger","newt","scamander","forces","quentin","selfprotection","trimble","phials","trains","bustling","stores","cinemas","sell","cooked","humor","trusting","unbelievable","grubbylooking","steered","women","sherry","smoking","buzz","tom","lord”","soul”","honor”","“doris","last”","flutter”","“delighted","diggle”","shop”","remembers”","grasping","“pppotter”","ppleased","ttell","“ccan’t","arts”","dddark","“ddefense","nneed","pppotter”","“n","ggetting","ggot","ppick","m”","walled","weeds","“told","tremblin’","tremblin’”","nervous”","bloke","studyin’","experience","firsthand","hag","umbrella”","hags","bricks","cobbled","alley”","instantly","shrink","sizes","needin’","hooting","instruments","eels’","spleens","tottering","globes","“gringotts”","burnished","goblin”","shorter","swarthy","engraved","heed","awaits","sin","dearly","beware","thief","ledgers","scribbling","examining","eyeglasses","“morning”","coals","rubies","order”","griphook”","mysteriously","job’s","steeply","railway","hurtling","maze","passages","stung","stalactites","stalagmites","stalactite”","stalagmite","‘m’","“stalagmite’s","lean","unlocked","columns","mounds","heaps","belonging","fortune","galleons”","galleon","twentynine","“seventeen","terms","“vault","slowly”","corners","ravine","scruff","sucked","fabulous","jewels","longed","infernal","shut”","“might","carts”","squat","mauve","wands”","bully","smuggle","somehow”","“play","agree","“mmm”","man”","works","gamekeeper”","savage","brilliant”","surname","raspberry","chopped","lied","wrote","forgettin’","“blimey","worse”","wizardin’","sister”","“school","duffers","gloomily","“vol","“years","blotts","flourish","paving","stamps","symbols","countercurses","befuddle","bewitch","jellylegs","loss","revenges","tonguetying","vindictus","viridian","circumstances”","couldn’","level”","list”","fascinating","cabbages","rotted","slimy","powders","bundles","strings","basic","supply","glittery","minuscule","twentyone","scoop","kids","sneeze","everythin’”","jewelbright","stammering","lotta","makers","cushion","tinkling","occurred","tingle","awkwardly","quarter","swishy","willow","work”","pliable","“thirteenhalf","“rubeus","bendy","“hmmm”","righthanded”","“hold","armpit","core","heartstrings","phoenixes","flitting","beechwood","flexible","heartstring","wave”","“maple","whippy","ebony","springy","mounting","customer","“tricky","combination","supple”","firework","whooped","bravo","“curious","curious”","destined","thirteenhalf","mustnamed","great”","gawking","paddington","leaves”","quiet”","chewed","special”","beginning","singled","’smatter","improvement","depressing","vacuum","august","quiz","lift”","grunt","carpets","punctures","o’clock”","“platform","ticket”","“barking”","“howling","bother”","hospital”","“taking","removed","smeltings”","jeans","loaded","dumped","built","term”","nastier","annoyed","wasters","according","arrivals","stranded","inspector’s","speaker","number”","piped","dividing","swarming","tourists","backpack","fred”","“hello","sons","gangling","trolley","steam","wroughtiron","carriages","dreadlocks","surrounded","lid","shove","heave","c’mere","“blimey”","“aren’t","chorused","gawked","train’s","“coming","geroff”","nosie”","ronnie","somefink","“aaah","mother”","compartments","fondly","behave","toilet”","ronniekins","rubbed","train”","potted”","girl’s","goggle","“asked","lightning”","“poor","reminding","owls”","seat”","e”","georg","disappear","redheaded","full”","“everywhere","jordan’s","tarantula","“bye”","george’s","jokes”","wizards”","accountant","“horrible","brothers”","“five”","sixth","expects","rat”","useless","wakes","aff","instead”","bet”","voicing","class”","cows","sheep","lanes","clattering","dimpled","“anything","dears”","drooble’s","gum","licorice","“hungry","“starving”","forgets","beef”","corned","“swap","dry”","pasty”","candies","agrippa”","ptolemy”","flowing","considered","bowling","astonishment","collecting”","strayed","“help","photos”","“weird”","hengist","woodcraft","alberic","circe","grunnion","paracelsus","cliodna","druidess","spinach","tripe","boogerflavored","sprouts”","“bleaaargh","strawberry","coffee","curry","sardine","pepper","wilder","hills","rivers","woods","tearful","bothered”","snoozing","difference”","rummaged","batteredlooking","hair’s","“unicorn","aback","butter","daisies","mellow","sunshine","yellow”","spell”","background","dazed","“goodness","soon”","“whatever","“stupid","dud”","settling","depressed","scabbers’","lighter”","“charlie’s","africa","vault”","prickle","entering","confessed","dumbfounded","positions","describing","thickset","bodyguards","goyle”","carelessly","cough","snigger","“think","afford”","tinge","cheeks","politer","riffraff","rub","knuckle","sleep”","conductor","“scabbers","change”","childishly","corridors”","sniffy","dirt","forests","slowing","sneakers","luggage","separately”","lurched","thronging","familiar","“firs’","“c’mon","stumbling","sec”","“yeh’ll","“oooooh”","atop","starry","turrets","shore","forward”","“heads","curtain","ivy","opening","tunnel","pebbles","rocks","blissfully","“trevor”","upper","drone","flagged","produced","triumphs","honor","becomes","credit","smarten","lingered","fastened","smudged","quietly”","hurts","doom","transparent","monk","“forgive","chances","deserves","tights","“new","mutely","“move","ceremony’s","start”","line”","sandy","goblets","lanterns","candlelight","avoid","velvety","history”","fourlegged","placed","frayed","patched","brim","judge","smarter","bowlers","cap","chivalry","loyal","patient","toil","unafraid","wit","cunning","achieve","flap","cap”","hat”","weakly","quickwitted","queasy","sorted”","“abbott","hannah”","pigtails","pinkfaced","moment’s","susan”","“bones","susan","terry”","“boot","“ravenclaw”","terry","mandy”","“brocklehurst","lavender”","“brown","catcalling","millicent”","“bulstrode","gym","justin”","“finchfletchley","“finnigan","declared","“granger","thoughts","amid","gales","morag”","“macdougal","swaggered","“slytherin”","“moon”","“nott”","“parkinson”","sally","“perks","anne”","“difficult","“hmm”","plenty","talent","prove","thirst","edges","greatness","icecold","thumbs","center","“thomas","lisa”","“turpin","excellent”","blaise”","pompously","“zabini","scroll","nitwit","blubber","oddment","tweak","airily","“mad”","dishes","beef","lamb","pork","carrots","fries","starved","peppermints","mimsyporpington","service","resident","nick”","mimsy","prefer","headless”","miffed","hinge","behead","unbearable","gaunt","stained","seating","arrangements","blood”","asked”","delicately","remains","blocks","apple","pies","tarts","doughnuts","eclairs","jell","strawberries","rice","dad’s","halfhalf”","witch”","blackpool","pier","enid","meringue","bounced","absurd","hooked","sallow","“ouch”","“nnothing”","teaches","awful","“ahem","notices","watered","pupils","remind","trials","“quidditch","righthand","death”","serious”","forest’s","song”","teachers’","ribbon","tune”","hoggy","scabby","filling","flies","fluff","forgot","rot”","conducted","funeral","march","music”","bedtime","beyond","trot”","doorways","panels","tapestries","dragging","farther","poltergeist”","“peeves","baron”","legged","cackle","“ickle","“oooooooh”","fun”","baron’ll","dress","“password”","draconis”","“caput","directed","posters","velvet","chewing","sheets”","transfer","destiny","sweating","“next","glasses”","“wearing","face”","lining","tiptoe","doubled","fortytwo","rickety","vanishing","politely","tickled","poltergeist","baskets","rugs","pelt","sneak","conk”","argus","unluckily","rescued","colored","patrolled","toe","appear","whisk","dearest","skies","greenhouses","dumpy","plants","staff","droned","uric","oddball","complex","“transfiguration","warned”","furniture","needle","pointy","vampire","ward","african","prince","troublesome","protected","today”","poured","slytherins”","“double","“wish","owners","laps","scrawl","afternoons","disliked","dislike","pickled","celebrity”","tunnels","art","exact","science","subtle","potionmaking”","beauty","simmering","delicate","fumes","liquids","shimmering","veins","ensnaring","brew","stopper","dunderheads","teach”","exchanged","proving","dunderhead","wormwood”","“tut","bezoar”","“thought","ignoring","wolfsbane”","“sit","information","wormwood","draught","goat","poisons","wolfsbane","aconite","continued","cure","crush","nettles","weigh","criticizing","stewed","acid","horned","slugs","melt","blob","seeping","holes","drenched","spilled","“idiot","porcupine","whimpered","wing”","unfair","nasty”","“cheer","galoshes","frantic","scrabbling","barks","booming","collar","hams","pheasants","patchwork","quilt","yerselves","pouring","chasin’","lumps","raisins","shapeless","rested","drooled","git”","sometime","charlie”","animals”","cutting","investigations","widely","spokesgoblin","might’ve","thieves","weighed","collected","groan","“typical”","reasonably","boastful","narrowly","helicopters","childhood","glider","constantly","argument","poster","prodding","tips","arrival","lecture","gloatingly","remembrall”","tells","looking”","threethirty","breezy","rippled","lawns","sloping","lawn","swaying","vibrate","“stick","‘’","horses","quaver","mount","correcting","grips","hard”","jumpy","hooch’s","cork","drift","lazily","bending","wrist”","“broken","get”","“none","‘quidditch’","tearstreaked","hobbled","pansy","“ooh","hardfaced","parkinson","crybabies","parvati”","snatching","longbottom’s","hovering","topmost","whoop","yeah”","grasped","javelin","“catch","motion","mingled","goyle’s","numbly","triumphant","defend","trotting","assistant","cane","burly","fifthyear","flitwick’s","blackboard","clanged","puzzlement","crisply","“absolutely”","fiftyfoot","dive”","scratch","“wood’s","build","“light","decent","speedy","cleansweep","sternly","punishing","dinnertime","kidney","“seeker”","shoveling","gaped","beaters”","year’s","skipping","gregory","smarmy","flanked","scowl","anytime","“tonight","sizing","“crabbe”","unlocked”","duel”","second’s","catching","duels","malfoy’ll","happens”","punch","“throw","overhearing","selfish","“goodbye”","dodge","looming","sneering","eleven”","“halfpast","embers","frown","brother”","“percy","goose","switching","spells”","painting","shrilly","problem”","snuffling","norris”","password","password’s","‘pig","lady’s","snout’","“fine”","mended","beckoned","striped","tiptoed","cases","glimmered","shields","statues","chickened","“sniff","corner”","horrorstruck","scurried","hiding”","“probably","mouthed","suits","clanging","“run”","doorpost","galloped","tapestry","spluttering","stitch","possible”","“quickly","tricked","“wandering","caughty”","sanity","wickedly","swipe","helplessly","end”","shouts","“alohomora”","‘please’","“shan’t","annoying","singsong","haaa","haaaaaa”","whooshing","locked”","tugging","drooling","saliva","slippery","thunderous","groped","monster","heads”","meantime","dangerous”","valuable","object","guessing","slightest","refusing","bonus","contains","enviously","barred","jealousy","spite","resist","comet","sixty”","flashy","“comets","league","nimbus”","twig”","boys”","“potters","circumstances","model","smothering","reward","stomping","disapprovingly","straying","bedspread","dusk","stadium","spectators","poles","lightest","nice”","joining","differentsized","ball’s","quaffle”","recited","basketball","basketball”","scoring”","keeper”","baseball","bludgers”","identical","straps","freed","pelted","zoomed","forcing","strapping","rocket","guards","reeled","anyone”","offhand","member","seeker’s","weave","team’s","catches","fouled","substitutes","cup’ll","trudged","dragons”","evenings","basics","mastered","baking","wafting","objects","zoom","angrier","spoken","practicing”","“swish","baruffio","‘f","‘s’","buffalo","chest”","swished","desktop","sending","impatient","windmill","leviosa","winggardium","‘gar’","long”","clever”","gown","leviosav’","glimpse","uncomfortable","friends”","overheard","lavender","awkward","bats","pumpkins","potato","“troll","uproar","exploding","firecrackers","rumbled","“lead","“prefects”","immediately”","element","joke”","percy’d","deserted","“percy”","griffin","“search","heading","stench","grunting","footfalls","emerged","boulder","granite","horny","waggled","slouched","key’s","lock”","praying","slam","chained","bathroom”","hermionel”","fumbling","shrinking","advancing","sinks","“confuse","seizing","lumbered","lifting","peabrain”","ugly","echoes","berserk","fasten","flailed","clinging","fright","owner’s","tremble","glue","boogers”","“urgh","crashes","roars","whimper","hopes","dormitory”","swift","granger”","fetch","arrived”","tackling","disappointed","finishing","fullgrown","grumbled","’s”","“mind","saving","“pig","ending","twelvefoot","november","chilled","steel","frost","defrosting","bundled","beaverskin","fur","begun","season","versus","weapon","leaked","mattress","committing","rarely","referees","desert","sahara","relaxed","conjured","yard","limping","“library","learn”","answers","restless","scene","mangled","bandages","thing”","“blasted","diversion”","wouldn’t”","saints","buzzing","snoring","dawned","fried","breakfast”","toast”","wheedled","hungry”","hour’s","strength”","“seekers","clobbered","pitch","fan","painted","paint","men”","“okay","heart”","oliver’s","gryffindor’s","fifth","flashing","skipped","“mount","attractive","commentary","belting","alicia","gains","katie","ouch","beater","dodges","bletchley","dives","misses","moans","along”","hut”","watchin’","bein’","“nope”","speck","attacked","looploops","weasleys’","wristwatches","cannonball","ducks","“chaser","speeds","murmur","streak","terence","spurt","spun","“foul”","“send","ref","“red","game”","coulda","oughta","air”","cheating","“jordan","kills","dangerously","spinning","lurch","riders","violent","unseated","commentating","jerking","managing","grayfaced","nonstop","jinxing","“leave","vibrating","circled","headfirst","crouched","wellchosen","hem","yelp","scooping","fours","ended","chappie","greek","las’","anymore”","sort”","afternoon’s","jinx","hotly","tellin’","meddlin’","■”","“aha”","mid","december","froze","snowballs","stormy","health","nursed","drafty","bitter","mist","lionfish","spine","disgusted","replacing","widemouthed","bucking","jealous","taunting","blocking","fir","“hi","drawl","palace","“weasley”","provoked","insultin’","silkily","smirking","grinding","treat”","festoons","mistletoe","icicles","holidays”","blossoming","working”","guardin’”","hint","nothin’”","searching","notable","sheer","tens","random","specially","containing","advanced","brandished","librarian","duster","hearing","hopeful","surprising","dentists”","emptier","spear","bread","english","muffins","toasting","marshmallows","plotting","teaching","figures","directing","troops","drawback","eve","presents”","turnips”","scrawled","whittled","enclose","message","fiftypence","friendly”","fascinated","pence","weird","one’s","knitted","homemade","mine’s","tasty","fluid","folds","valuable”","cloth","woven","awe","suspended","note”","loopy","merry","signature","anuthinq","“anuthinq","sweaters","“harry’s","lovely","warm”","halfheartedly","observed","gred","forge”","noise”","disapproving","“p","thickly","either”","“christmas","frogmarched","turkeys","chipolatas","platters","buttered","tureens","cranberry","sauce","stacks","flimsy","cracker","bang","cannon","engulfed","admiral’s","flowered","bonnet","puddings","embedded","slice","kissing","giggled","lopsided","including","balloons","nonexplodable","kit","warts","norris’s","snowball","spectacularly","crumpets","chase","whoever","fourposter","flow","smoother","wideawake","squawked","eerie","pitchblack","supporting","creeps","rope","stepping","separated","languages","spelled","title","stain","interestinglooking","volume","balancing","bloodcurdling","unbroken","earsplitting","panicking","shrieking","outstretched","book’s","ringing","directly","section”","somebody’s","drain","shortcut","replied","shapes","unused","basket","upturned","propped","clawed","ornate","inscription","cafru","ehru","stra","ube","wohsi","mirrors","existed","edging","“mom”","ache","sadness","fade","crossly","everyone”","retracing","route","freezing”","paisley","image","future”","discussion","“quick”","shaves","grandfathers","nearsighted","“strange","delights","discovered","erised”","happiest","deepest","overshadowed","sees","knowledge","wasted","entranced","admirable","“obviously","however”","woolen","insist","books”","shoved","truthful","personal","flambl","disappearing","nights","roaming","disappointment","breaks","endless","replaced","dampen","fanatic","muddy","divebombing","refereeing”","mud","refereed","concern”","terrible”","sinister","“pretend","climb","hop","“malfoy”","“report","easier”","chose","stinking","‘dumbledore","flamel’v’","exchange","mystified","reading”","“light”","flicking","pages","dramatically","“nicolas","maker","effect","honestly","legendary","transform","produces","immortal","reports","centuries","belongs","existence","noted","alchemist","celebrated","lover","opera","sixtyfifth","devon","fiftyeight","stops","dying”","wizardry”","sixtyfive","treating","bites","discussing","wipe","win”","field”","overtaking","biased","weekly","torture","pep","grim","secretly","using","locomotor","mortis”","nag”","pressure","capture","favor","watch”","somersault","“dumbledore”","ouch”","broadly","fixedly","brains”","howled","poorer","“longbottom","anxiety","“ron”","bullet","ground”","leaping","scuffles","yelps","triumph","game’s","lead”","spilling","tightlipped","whitefaced","“nice","brooding","broomshed","reliving","blur","nosebleed","shed","figure’s","prowling","circles","brushing","noiselessly","beech","ddon’t","pplaces","private”","mumbling","“bb","enemy","steadied","hocuspocus","dddon’t","“b","loyalties","thumping","kitchens”","‘hocuspocus’","tuesday”","paler","thinner","press","growling","encouraging","colorcoding","minded","weeks”","“ten","old”","easter","reciting","longingly","“dittany”","lookin’”","shifty","ter”","suspicious","impressively","shoutin’","promisin’","aren’","rabbitin’","“dragons”","species","inferno","ireland","guide”","keeper’s","laws”","convention","outlawed","warlocks’","tame","burns","romania”","britain”","welsh","“common","blacks","hebridean","hushing","forget”","earth’s","gamekeeper’s","stifling","refused","frowned","“number","“o’","beats","s’ppose","flattering","s’pose","“snape”","protecting","guarded","boiling”","fiddling","“ah”","fortune”","“won","havin’","honest”","hatched”","doin’","readin’”","pleasure","profit","hatches","humming","stoked","peaceful","hatching","skip","hatching”","argued","trowels","greeted","ushered","clicking","bated","spiny","stubs","sneezed","beautiful”","“isn’t","stroke","exactly”","ridgebacks","“someone","runnin’","darkened","free”","“set","furling","gamekeeping","duties","marbles”","dump","“charlie”","wild”","chimed","lullaby”","hedwig”","answer”","cloak’s","hitch","swollen","shade","“although","feels","soothe","bandaged","puffed","“norbert’s","stage","boot","“aargh","playin’","rattle","arriving","tennis","journey”","lonely”","“byebye","“mommy","shortcuts","forgetting","grappling","outlines","tartan","net","“detention”","utter","easiest","jig","sing”","advised","“don’t”","cheery","harness","rigged","suspend","thanked","happiness","loomed","alibis","excuses","cornered","violently","likely","slippers","cock","bull","blundering","disgusted”","“four","receive","“fifty”","“fifty","can’t—”","dawn","hourglasses","recorded","admired","popular","longing","insulted","owe","repair","meddle","resign","good’ll","“resign”","wellknown","misery","memorize","rebellions","due","resolution","unexpected","whimpering","sob","straightening","meddling","gambled","spring","testing","kindling","proof”","“quirrell’s","depended","explaining”","jupiter","delivered","furor","deserved","lighting","leering","pity","punishments","wrists","chains","oiled","sniffing","scudding","started”","oaf","mistaken","piece”","moan","arrows","waitin’","“abou’","lecturin’","’snot","dawn”","“yeh’ve","good’s","“copyin’","father’d","gaze","risks","track","shinin’","misery”","trail","staggerin’","fang’s","coward”","hermione’ll","fang’ll","silverblue","unicorns”","mossy","stump","can’t’ve","hoisted","arrow","shouldn’","werewolf”","“show","chestnut","horse’s","reddish","centaur’s","sorrowful","loose","centaur”","noticed”","evening”","“erm","bit”","anythin’”","innocent","victims”","unusual”","bright”","“unusually","meanin’","strange”","hides","secrets”","bow","bodied","wilderlooking","bane”","“hullo","injured","“try","stargazers","closer’n","moon”","mostly","turnin’","earlier”","undergrowth","sharper","fuming","sneaked","panicked","changin’","makin’","frightenin’","splashes","thicker","inched","slender","freeze","stalking","cloaked","“aaaaaaaaaaargh","dribbling","pierced","blinded","staggered","charging","whiteblond","palomino","astonishingly","sapphires","lingering","livid","firenze”","flanks","heaving","“firenze”","mule”","“remember","planets”","foretold","donkeys","stray","hind","reared","alongside","must”","whisked","lowhanging","horn","potions”","slay","commit","gain","inch","price","defenseless","slain","halflife","lips”","firenze’s","dappled","desperate”","death’s","awaiting","clung","chance”","iron","voz","fine”","unicorn’s","wrongly","cantered","shivering","fouls","“firenze","feverishly","happy”","fortunetelling","branch","imprecise","exhausted","throats","sweltering","anticheating","practical","pineapple","tapdance","forgetfulness","pains","stabbing","bothering","dripping","foreheads","visiting","fret","answering","batty","flocking","code","conduct","uprising","eager”","elfric","squid","tentacles","tickling","basking","shallows","studying”","pomfrey”","danger’s","proof","lets","unsettled","betray","grassy","slope","wander","law","shelling","“finished","“hullo”","hog’s","pubs","dealer","mightn’","hood","“mighta","can’","buyin’","dogs","fluffy’s","shouldn’ta","“forget","goin’”","hey","office”","fishy","urgent","“now”","demands","“something","winds","tumbled","suspicion","assured","protected”","enjoy","sunshine”","careful”","“hanging","wanderings","personally","obvious”","‘oh","fourteen","separating","stormed","“enough","tail”","went”","“flitwick","percent","pocketed","bid","freedom","hurriedly","nothing”","understand”","steeling","idiot”","people”","exasperation","ready”","totalusl”","“petrificus","rigid","bodybind”","explain”","motionless","omen","statue’s","skulking","carpet","beastie”","ghostie","ghoulie","wee","unseen”","bloodiness","greasily","peevsie","scooted","“brilliant","impress","coming”","creaked","feet”","harp”","“looks","beast’s","tune","droop","ceased","tottered","smelly","approached","gritted","ring","asleep”","seconds’","fingertips","flump","thump","jump”","sprawled","bark","thing’s","“lucky”","struggle","tendrils","twist","creepers","tighter","snare”","curling","“devil’s","likes","wood”","wringing","bluebell","cringed","flailing","unraveled","wriggling","bodies","crisis","wood’","‘’s","drip","gentle","trickling","fullygrown","clinking","brilliantly","arching","jewel","tumbling","vicious","“probably”","beaks","untouched","tugged","alohomora","birds”","winged","flock","squinted","door”","oldfashioned","midst","spotting","minute’s","weaving","rainbow","damaged","rocketed","rammed","chessboard","think”","chessmen”","knights","helmeted","across”","offended","offended”","castle”","knight”","plays","“white","pawn","diagonally","smashed","happen”","“leaves","limp","taken”","sacrifices","checkmate","hell","alternative","pounced","spaces","crown","charged","convince","reckon’s","sprout’s","transfigured","watering","larger","tackled","lump","differently","“snape’s”","threshold","safety","transport","killers","forevermore","slyly","wine’s","dwarf","holds","puzzle","“everything","purple”","swallow”","flames”","flyingkey","“hermionel”","cleverness","“books","friendship","carefull”","“positive”","poison”","ice”","wears","“go”","flooding","braced","“severus”","treble","type","overgrown","pppoor","suspect","pprofessor","unpopular","nosy","scurrying","“certainly","“trust","concentrating","idly","frighten","presenting","“heavens","loathed","spasm","“sometimes”","instructions","master’s","traveled","faithfully","served","mistakes","displeased","trailed","self","master”","“use","scaredlooking","incredibly","rooting","muscle","slits","become”","“mere","vapor","another’s","willing","strengthened","faithful","create","pocket”","surged","fool”","begging","“liar”","value","courageous","vain”","flame","needlesharp","seared","lessened","seize","lunged","hands”","pinning","palms","raw","perform","instinct","“aaaargh”","yells","“kill","grasp","blackness","swam","“calm","linen","admirers”","“tokens","naturally","misters","responsible","confiscated","hygienic","worried”","distracted","prevent","destroyed”","blankly","“destroyed”","nicolas”","affairs","stored","organized","beings","precisely","“sir”","increases","truly","nevertheless","merely","power”","truth”","treated","beg","hatred","marked","bird","sheet","twinkled","“useful","“fire","detest","unlike","forgive”","dreamily","debt","hating","otherwise","unfortunate","youth","vomitflavored","toffee","goldenbrown","wax”","nurse","minutes”","pleaded","“absolutely","rest”","resting","“harryl”","fling","audience","“flamel’s","wellorganized","‘","adventure’","rocker”","‘harry’s","fathers","“sending","killed”","isn’t”","stopping","accident","rocker","steamrollered","food’ll","bustled","feast”","sniffily","risky","visitor”","indoors","git","chucked","grief","leaking","remorse","sandwich","chuckle","fix","shoulda","leathercovered","“sent","photos","endyear","fussing","insisting","pomfrey’s","checkup","decked","hush","fortunately","waffle","fuller","awarding","thus","fiftytwo","twentysix","stamping","account”","“however","slytherins’","lastminute","“ahem”","dish","radish","sunburn","bestplayed","set”","“second","“third","din","seventytwo","gradually","courage”","kinds","takes","explosion","nudged","bodybind","downfall","jot","grades","scraped","abysmal","wardrobes","toilets","boarding","greener","tidier","towns","wizened","gate","twos","threes","alarming","“bye","squealed","point”","“busy","“ready","purplefaced","mustached","manner","speaking”","holiday”","spreading"],"freq":[1507,883,755,414,413,399,349,347,319,319,250,245,237,193,193,189,187,186,169,166,164,162,140,133,132,129,126,121,117,116,115,115,112,111,110,110,104,104,103,103,102,101,99,99,99,95,95,94,92,92,91,91,90,90,88,88,87,86,85,84,84,82,82,82,79,79,77,77,76,75,75,74,74,74,73,73,73,72,71,70,70,70,70,69,69,68,67,67,67,67,66,66,66,65,65,63,63,63,63,61,61,60,60,59,59,59,59,59,58,58,58,58,57,57,56,56,55,54,54,54,54,54,54,54,53,53,53,53,52,52,52,52,52,51,51,51,51,50,50,49,49,49,49,48,48,48,47,47,47,47,47,47,47,47,46,46,46,46,46,45,45,45,45,45,45,44,44,44,44,43,43,43,43,43,43,42,42,42,42,41,41,41,41,41,41,40,40,40,40,40,39,39,39,39,39,38,38,38,38,37,37,37,37,36,36,36,36,36,36,35,35,35,35,35,35,34,34,34,34,34,34,34,33,33,33,33,33,32,32,32,32,32,32,32,32,32,31,31,31,31,31,31,31,31,31,31,31,30,30,30,30,30,29,29,29,29,29,29,29,29,29,29,28,28,28,28,28,28,28,28,28,28,27,27,27,27,27,27,27,27,27,27,26,26,26,26,26,26,26,26,26,26,26,26,25,25,25,25,25,25,25,25,25,25,25,24,24,24,24,24,24,24,24,24,24,24,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],"fontFamily":"Avenir Next","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.179163901791639,"backgroundColor":"white","gridSize":0,"minRotation":-0.785398163397448,"maxRotation":0.785398163397448,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
+</div>
+</div>
+<div id="visualize-distribution" class="section level1">
+<h1>Visualize distribution</h1>
+<div id="histogram" class="section level2">
+<h2>Histogram</h2>
+<div id="single-histogram" class="section level3">
+<h3>Single histogram</h3>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-24-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="two-histograms" class="section level3">
+<h3>Two histograms</h3>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-28-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="density-plot" class="section level2">
+<h2>Density plot</h2>
+<div id="single-density" class="section level3">
+<h3>Single density</h3>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-29-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="two-densities" class="section level3">
+<h3>Two densities</h3>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-30-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-31-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="multiple-densities" class="section level3">
+<h3>Multiple densities</h3>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-33-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="visualize-correlation" class="section level1">
+<h1>Visualize correlation</h1>
+<div id="scatterplot" class="section level2">
+<h2>Scatterplot</h2>
+<div id="basic-scatterplot" class="section level3">
+<h3>Basic scatterplot</h3>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-34-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="all-against-all-scatterplot" class="section level3">
+<h3>All-against-all scatterplot</h3>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-36-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="bubble-chart" class="section level2">
+<h2>Bubble chart</h2>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-37-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="correlogram" class="section level2">
+<h2>Correlogram</h2>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-39-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-40-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="slopegraph" class="section level2">
+<h2>Slopegraph</h2>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-42-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-43-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="visualization-proportion" class="section level1">
+<h1>Visualization proportion</h1>
+<div id="waffle-chart" class="section level2">
+<h2>Waffle chart</h2>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-44-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="pie-chart" class="section level2">
+<h2>Pie chart</h2>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-46-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="donut-chart" class="section level2">
+<h2>Donut chart</h2>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-47-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mosaic-plot" class="section level2">
+<h2>Mosaic plot</h2>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-49-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="treemap" class="section level2">
+<h2>Treemap</h2>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-51-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="parallel-sets-plot" class="section level2">
+<h2>Parallel sets plot</h2>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-53-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="visualize-revolution" class="section level1">
+<h1>Visualize revolution</h1>
+<div id="line-chart" class="section level2">
+<h2>Line chart</h2>
+<div id="single-variable" class="section level3">
+<h3>Single variable</h3>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-54-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="multiple-variables" class="section level3">
+<h3>Multiple variables</h3>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-56-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="area-chart" class="section level2">
+<h2>Area chart</h2>
+<p><img src="data_viz_files/figure-html/unnamed-chunk-57-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,15 +1,8 @@
 name: "R Markdown Websites Tutorial"
 navbar:
-  title: "HOME"
   left:
-    - text: "First Observations"
-      href: first_observations.html
-    - text: "Basic Workflow"
-      href: basic_workflow.html
-    - text: "Getting Sophisticated"
-      href: getting_sophisticated.html
-    - text: "Your Turn"
-      href: your_turn.html
+    - text: "Data Viz"
+      href: data_viz.html
 output_dir: "."
 output:
   html_document:
