@@ -8,7 +8,7 @@ output:
 
 ----
 
-1. [Principle Component Analysis: Discovering patterns in a wine dataset](https://vinhhle.github.io/PCA/)
-2. [Data Visualization](https://vinhhle.github.io/PCA/)
+- [Data Visualization Collecion Created in ggplot2](https://vinhhle.github.io/data_viz/)
+- [Principle Component Analysis: Discovering patterns in a wine dataset](https://vinhhle.github.io/PCA/)
 
 ----
