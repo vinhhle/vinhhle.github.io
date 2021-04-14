@@ -1,8 +1,7 @@
 name: "R Markdown Websites Tutorial"
 navbar:
   left:
-    - text: "Data Viz"
-      href: data_viz.html
+    - text: ""
 output_dir: "."
 output:
   html_document:
