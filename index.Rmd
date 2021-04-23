@@ -4,11 +4,13 @@ author:  "Vinh Hung Le"
 output:
   html_document:
     fig_width: 1
+    css: styles.css
 ---
 
 ----
 
 - [Data Visualization Collecion Created in ggplot2](https://vinhhle.github.io/data_viz/)
-- [Principle Component Analysis: Discovering patterns in a wine dataset](https://vinhhle.github.io/PCA/)
+- [Linear Regression: Predict Rental Prices in Berlin](https://vinhhle.github.io/linear_regression_berlin/)
+- [Principle Component Analysis: Discovering Patterns in a Wine Dataset](https://vinhhle.github.io/PCA/)
 
 ----
