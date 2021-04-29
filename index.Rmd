@@ -11,6 +11,7 @@ output:
 
 - [Data Visualization Collecion Created in ggplot2](https://vinhhle.github.io/data_viz/)
 - [Linear Regression: Predict Rental Prices in Berlin](https://vinhhle.github.io/linear_regression_berlin/)
+- [Logistic Regression And Two-Class Classification: Predicting Income in the Census Database](https://vinhhle.github.io/logistic_regression/)
 - [Principle Component Analysis: Discovering Patterns in a Wine Dataset](https://vinhhle.github.io/PCA/)
 
 ----
