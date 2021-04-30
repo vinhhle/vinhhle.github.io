@@ -1,6 +1,4 @@
 ---
-title: "Data Analysis Projects"
-author:  "Vinh Hung Le"
 output:
   html_document:
     fig_width: 1
@@ -9,9 +7,27 @@ output:
 
 ----
 
-- [Data Visualization Collecion Created in ggplot2](https://vinhhle.github.io/data_viz/)
-- [Linear Regression: Predict Rental Prices in Berlin](https://vinhhle.github.io/linear_regression_berlin/)
-- [Logistic Regression And Two-Class Classification: Predicting Income in the Census Database](https://vinhhle.github.io/logistic_regression/)
-- [Principle Component Analysis: Discovering Patterns in a Wine Dataset](https://vinhhle.github.io/PCA/)
+:::: {style="display: flex;"}
 
-----
+::: {}
+
+<img src="/Users/huvi/Desktop/vinhhle.github.io/profile_pic.jpg" width="1900px">
+
+:::
+
+::: {.col data-latex="{0.05\textwidth}"}
+\ 
+<!-- an empty Div (with a white space), serving as
+a column separator -->
+:::
+
+::: {}
+
+Moin moin!
+
+My name is Vinh Hung Le, currently a master student of Quantitative Economics in the University of Kiel.
+
+
+:::
+
+::::
