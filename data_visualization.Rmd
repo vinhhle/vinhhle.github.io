@@ -23,7 +23,7 @@ output:
 
 <div class="col3">
 
-<font size="4"><center>**[2020 Daily Temperatures in Kiel](https://vinhhle.github.io/data_viz/)**</center></font>
+<font size="4"><center>**[2020 Daily Temperatures in Kiel](https://vinhhle.github.io/kiel_temperature/)**</center></font>
 
 <img src="/Users/huvi/Desktop/vinhhle.github.io/pics/kiel_temperature.png" width="270px">
 

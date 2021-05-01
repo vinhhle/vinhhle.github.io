@@ -14,7 +14,7 @@ output:
 
 <div class="col2">
 
-<img src="/Users/huvi/Desktop/vinhhle.github.io/profile_pic.jpg" width="700px">
+<img src="/Users/huvi/Desktop/vinhhle.github.io/profile_pic.jpg" width="400px">
 
 <br>
 
@@ -23,6 +23,8 @@ output:
 Moin moin!
 
 I am an aspiring data visualist and analyist from Hue, Vietnam. Currently I am a master student of Quantitative Economics at the University of Kiel, where I mainly focus on statistics and econometrics. 
+
+When not studying or working, I enjoy reading, guitar playing, photographing, badminton training, and traveling with friends.  
 
 </div>
 
