@@ -263,20 +263,21 @@ $(document).ready(function () {
 </div>
 
 
-<hr />
-<div style="display: flex;">
-<div>
-<p><img src="profile_pic.jpg" width="1900px"></p>
-</div>
-<div class="col">
-<p>  <!-- an empty Div (with a white space), serving as
-a column separator --></p>
-</div>
-<div>
+<style>
+  .col2 {
+    columns: 2 200px;         /* number of columns and width in pixels*/
+    -webkit-columns: 2 200px; /* chrome, safari */
+    -moz-columns: 2 200px;    /* firefox */
+  }
+</style>
+<div class="col2">
+<p><img src="profile_pic.jpg" width="700px"></p>
+<p><br></p>
+<p><br></p>
 <p>Moin moin!</p>
-<p>My name is Vinh Hung Le, currently a master student of Quantitative Economics in the University of Kiel.</p>
+<p>I am an aspiring data visualist and analyist from Hue, Vietnam. Currently I am a master student of Quantitative Economics at the University of Kiel, where I mainly focus on statistics and econometrics.</p>
 </div>
-</div>
+<p><br></p>
 
 
 

@@ -9,10 +9,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Vinh Hung Le" />
 
 
-<title>Data Visualization</title>
+<title>data_visualization.utf8</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -260,75 +259,63 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Data Visualization</h1>
-<h4 class="author">Vinh Hung Le</h4>
 
 </div>
 
 
+<p><font size="5"></p>
+<center>
+<strong>This is a collection of graphs, charts, and maps I’ve made using R (mainly ggplot2) to show the data-viz capabilities.</strong>
+</center>
+<p></font></p>
 <hr />
-<ul>
-<li><a href="https://vinhhle.github.io/data_viz/">Data Visualization Collecion Created in ggplot2</a></li>
-</ul>
-<pre class="r"><code>library(ggplot2)
-library(dplyr)
-
-text_color = &quot;#353d42&quot;
-caption_color = &quot;#666666&quot;
-font = &quot;Avenir Next&quot;
-
-country_list = c(&quot;United States&quot;, &quot;China&quot;, &quot;India&quot;, &quot;Japan&quot;, &quot;Vietnam&quot;, &quot;Brazil&quot;, &quot;Germany&quot;, &quot;France&quot;, &quot;United Kingdom&quot;, &quot;Italy&quot;, &quot;New Zealand&quot;, &quot;Canada&quot;, &quot;Mexico&quot;, &quot;Chile&quot;, &quot;Argentina&quot;, &quot;Norway&quot;, &quot;South Africa&quot;, &quot;Myanmar&quot;, &quot;Israel&quot;, &quot;Iceland&quot;)
-
-internet &lt;- read.csv(&quot;/Users/huvi/Desktop/datasets/Individuals.using.the.Internet.%.population.World.Bank.csv&quot;)
-
-internet_short &lt;- internet %&gt;% 
-  dplyr::select(Country = Country.Name, Time, Users = Individuals.using.the.Internet....of.population...IT.NET.USER.ZS.) %&gt;% 
-  filter(Country %in% country_list) %&gt;% 
-  mutate(Users = ifelse(is.na(Users), 0, Users))
-
-internet_summary &lt;- internet_short %&gt;% 
-  group_by(Country) %&gt;% 
-  summarize(Time1 = min(Time[Users &gt; 0]),
-            Last = Users[n()]) %&gt;% 
-  arrange(Last, desc(Time1))
-         
-internet_short &lt;- internet_short %&gt;% 
-  mutate(Country = factor(Country, levels = internet_summary$Country),
-         Users = as.numeric(Users))
-
-ggplot(internet_short, aes(x = Time, y = Country, fill = Users)) +
-  geom_tile(color = &quot;white&quot;, size = 0.3) + #Color of border between tiles and size of the color
-  scale_x_continuous(expand = c(0, 0), name = NULL) +
-  scale_y_discrete(name = NULL, position = &quot;right&quot;)+
-  scale_fill_viridis_c(
-    option = &quot;A&quot;, begin = 0.05, end = 0.98,
-    limits = c(0,100), #Set limit on the legend
-    name = &quot;internet users / 100 people&quot;,
-    guide = guide_colorbar(
-      direction = &quot;horizontal&quot;,
-      label.position = &quot;bottom&quot;,
-      title.position = &quot;top&quot;,
-      barwidth = grid::unit(2.5, &quot;in&quot;),
-      barheight = grid::unit(0.2, &quot;in&quot;), 
-      ticks = FALSE)) +
-  labs(
-    caption = &quot;Source: World Bank&quot;) +
-  coord_equal() + # to make sure the tiles are square
-  theme(
-    panel.background = element_blank(),
-    axis.line = element_blank(),
-    axis.ticks.length = grid::unit(1, &quot;pt&quot;),
-    axis.ticks = element_blank(),
-    legend.position = &quot;bottom&quot;,
-    legend.justification = &quot;right&quot;,
-    legend.title = element_text(family = font, color = text_color, size = 11),
-    legend.title.align = 0.5,
-    legend.box.spacing = unit(0, &quot;pt&quot;),
-    legend.text = element_text(family = font, color = text_color, size = 9),
-    axis.text = element_text(family = font, color = text_color, size = 11),
-    plot.caption = element_text(family = font, color = caption_color, size = 9, hjust = 0))</code></pre>
-<p><img src="data_visualization_files/figure-html/unnamed-chunk-1-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<style>
+  .col3 {
+    columns: 3 270px;         /* number of columns and width in pixels*/
+    -webkit-columns: 3 270px; /* chrome, safari */
+    -moz-columns: 3 300px;    /* firefox */
+  }
+</style>
+<div class="col3">
+<center>
+<strong><a href="https://vinhhle.github.io/data_viz/">How common is your birthday</a></strong>
+</center>
+<p><img src="pics/test.png" width="270px"></p>
+<p><br></p>
+<center>
+<strong><a href="https://vinhhle.github.io/data_viz/">GDP vs Life Expectancy</a></strong>
+</center>
+<p><img src="pics/test.png" width="270px"></p>
+<p><br></p>
+<center>
+<strong><a href="https://vinhhle.github.io/data_viz/">A map of Harry Potter</a></strong>
+</center>
+<p><img src="pics/test.png" width="270px"></p>
+</div>
 <hr />
+<style>
+  .col3 {
+    columns: 3 270px;         /* number of columns and width in pixels*/
+    -webkit-columns: 3 270px; /* chrome, safari */
+    -moz-columns: 3 270px;    /* firefox */
+  }
+</style>
+<div class="col3">
+<center>
+<strong><a href="https://vinhhle.github.io/data_viz/">How common is your birthday</a></strong>
+</center>
+<p><img src="pics/unnamed-chunk-11-1.png" width="270px"></p>
+<p><br></p>
+<center>
+<strong><a href="https://vinhhle.github.io/data_viz/">GDP vs Life Expectancy</a></strong>
+</center>
+<p><img src="pics/unnamed-chunk-11-1.png" width="270px"></p>
+<p><br></p>
+<center>
+<strong><a href="https://vinhhle.github.io/data_viz/">A map of Harry Potter</a></strong>
+</center>
+<p><img src="pics/unnamed-chunk-13-1.png" width="270px"></p>
+</div>
 
 
 

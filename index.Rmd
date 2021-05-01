@@ -1,33 +1,30 @@
 ---
 output:
   html_document:
-    fig_width: 1
     css: styles.css
 ---
 
-----
+<style>
+  .col2 {
+    columns: 2 200px;         /* number of columns and width in pixels*/
+    -webkit-columns: 2 200px; /* chrome, safari */
+    -moz-columns: 2 200px;    /* firefox */
+  }
+</style>
 
-:::: {style="display: flex;"}
+<div class="col2">
 
-::: {}
+<img src="/Users/huvi/Desktop/vinhhle.github.io/profile_pic.jpg" width="700px">
 
-<img src="/Users/huvi/Desktop/vinhhle.github.io/profile_pic.jpg" width="1900px">
+<br>
 
-:::
-
-::: {.col data-latex="{0.05\textwidth}"}
-\ 
-<!-- an empty Div (with a white space), serving as
-a column separator -->
-:::
-
-::: {}
+<br>
 
 Moin moin!
 
-My name is Vinh Hung Le, currently a master student of Quantitative Economics in the University of Kiel.
+I am an aspiring data visualist and analyist from Hue, Vietnam. Currently I am a master student of Quantitative Economics at the University of Kiel, where I mainly focus on statistics and econometrics. 
 
+</div>
 
-:::
+<br>
 
-::::
