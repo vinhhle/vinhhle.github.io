@@ -7,7 +7,7 @@ output:
 
 <font size="5">
 
-<center>**This is a collection of graphs, charts, and maps I've made using R (mainly ggplot2) to show the data-viz capabilities.**</center>
+<center>**This is a collection of graphs, charts, and maps I've made using R (mainly ggplot2) to show the data-viz capabilities. Click to see more details about each plot and dataset.**</center>
 
 </font>
 
@@ -23,16 +23,16 @@ output:
 
 <div class="col3">
 
-<center>**[How common is your birthday](https://vinhhle.github.io/data_viz/)**</center>
+<font size="4"><center>**[2020 Daily Temperatures in Kiel](https://vinhhle.github.io/data_viz/)**</center></font>
 
-<img src="/Users/huvi/Desktop/vinhhle.github.io/pics/test.png" width="270px">
+<img src="/Users/huvi/Desktop/vinhhle.github.io/pics/kiel_temperature.png" width="270px">
 
 <br>
 
 
 <center>**[GDP vs Life Expectancy](https://vinhhle.github.io/data_viz/)**</center>
 
-<img src="/Users/huvi/Desktop/vinhhle.github.io/pics/test.png" width="270px">
+<img src="/Users/huvi/Desktop/vinhhle.github.io/pics/unnamed.png" width="270px">
 
 <br>
 
@@ -62,13 +62,13 @@ output:
 
 <center>**[GDP vs Life Expectancy](https://vinhhle.github.io/data_viz/)**</center>
 
-<img src="/Users/huvi/Desktop/vinhhle.github.io/pics/unnamed-chunk-11-1.png" width="270px">
+<img src="/Users/huvi/Desktop/vinhhle.github.io/pics/unnamed-chunk-12-1.png" width="270px">
 
 <br>
 
 <center>**[A map of Harry Potter](https://vinhhle.github.io/data_viz/)**</center>
 
-<img src="/Users/huvi/Desktop/vinhhle.github.io/pics/unnamed-chunk-13-1.png" width="270px">
+<img src="/Users/huvi/Desktop/vinhhle.github.io/pics/unnamed-chunk-13-1.png" width="260px">
 
 </div>
 
