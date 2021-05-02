@@ -23,22 +23,22 @@ output:
 
 <div class="col3">
 
-<font size="4"><center>**[2020 Daily Temperatures in Kiel](https://vinhhle.github.io/kiel_temperature/)**</center></font>
+<font size="4"><center>**[Daily Temperatures in Kiel](https://vinhhle.github.io/kiel_temperature/)**</center></font>
 
-<img src="/Users/huvi/Desktop/vinhhle.github.io/pics/kiel_temperature.png" width="270px">
+<img src="/Users/huvi/Desktop/vinhhle.github.io/pics/1.kiel_temperature.png" width="270px">
 
 <br>
 
 
-<center>**[GDP vs Life Expectancy](https://vinhhle.github.io/data_viz/)**</center>
+<font size="4"><center>**[Migration Flow in Europe](https://vinhhle.github.io/data_viz/)**</center></font>
+
+<img src="/Users/huvi/Desktop/vinhhle.github.io/pics/2.migration_flow_chord_diagram.png" width="270px">
+
+<br>
+
+<font size="4"><center>**[Test](https://vinhhle.github.io/data_viz/)**</center></font>
 
 <img src="/Users/huvi/Desktop/vinhhle.github.io/pics/unnamed.png" width="270px">
-
-<br>
-
-<center>**[A map of Harry Potter](https://vinhhle.github.io/data_viz/)**</center>
-
-<img src="/Users/huvi/Desktop/vinhhle.github.io/pics/test.png" width="270px">
 
 </div>
 
@@ -48,28 +48,31 @@ output:
   .col3 {
     columns: 3 270px;         /* number of columns and width in pixels*/
     -webkit-columns: 3 270px; /* chrome, safari */
-    -moz-columns: 3 270px;    /* firefox */
+    -moz-columns: 3 300px;    /* firefox */
   }
 </style>
 
 <div class="col3">
 
-<center>**[How common is your birthday](https://vinhhle.github.io/data_viz/)**</center>
+<font size="4"><center>**[Test](https://vinhhle.github.io/kiel_temperature/)**</center></font>
 
-<img src="/Users/huvi/Desktop/vinhhle.github.io/pics/unnamed-chunk-11-1.png" width="270px">
-
-<br>
-
-<center>**[GDP vs Life Expectancy](https://vinhhle.github.io/data_viz/)**</center>
-
-<img src="/Users/huvi/Desktop/vinhhle.github.io/pics/unnamed-chunk-12-1.png" width="270px">
+<img src="/Users/huvi/Desktop/vinhhle.github.io/pics/1.kiel_temperature.png" width="270px">
 
 <br>
 
-<center>**[A map of Harry Potter](https://vinhhle.github.io/data_viz/)**</center>
 
-<img src="/Users/huvi/Desktop/vinhhle.github.io/pics/unnamed-chunk-13-1.png" width="260px">
+<font size="4"><center>**[Test](https://vinhhle.github.io/data_viz/)**</center></font>
+
+<img src="/Users/huvi/Desktop/vinhhle.github.io/pics/2.migration_flow_chord_diagram.png" width="270px">
+
+<br>
+
+<font size="4"><center>**[Test](https://vinhhle.github.io/data_viz/)**</center></font>
+
+<img src="/Users/huvi/Desktop/vinhhle.github.io/pics/unnamed.png" width="270px">
 
 </div>
+
+----
 
 

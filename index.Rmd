@@ -24,6 +24,8 @@ Moin moin!
 
 I am an aspiring data visualist and analyist from Hue, Vietnam. Currently I am a master student of Quantitative Economics at the University of Kiel, where I mainly focus on statistics and econometrics. 
 
+Almost all data visualization and analysis projects I've been working are done with the programming language R, namely [ggplot2](https://ggplot2.tidyverse.org/) for graphs and [dplyr](https://dplyr.tidyverse.org/) for data manipulation. In coming years, I have two main goals: to improve my analysis and machine learning capabilities to deal with larger and more complex datasets as well as to learn the javascript library [d3.js](https://d3js.org/) to create powerful, interactive graphs.
+
 When not studying or working, I enjoy reading, guitar playing, photographing, badminton training, and traveling with friends.  
 
 </div>
