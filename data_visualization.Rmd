@@ -30,15 +30,15 @@ output:
 <br>
 
 
-<font size="4"><center>**[Migration Flow in Europe](https://vinhhle.github.io/data_viz/)**</center></font>
+<font size="4"><center>**[Migration Flows in Europe](https://vinhhle.github.io/data_viz/)**</center></font>
 
 <img src="/Users/huvi/Desktop/vinhhle.github.io/pics/2.migration_flow_chord_diagram.png" width="270px">
 
 <br>
 
-<font size="4"><center>**[Test](https://vinhhle.github.io/data_viz/)**</center></font>
+<font size="4"><center>**[World Demographics Interactive Bubble Chart](https://vinhhle.github.io/data_viz/)**</center></font>
 
-<img src="/Users/huvi/Desktop/vinhhle.github.io/pics/unnamed.png" width="270px">
+<img src="/Users/huvi/Desktop/vinhhle.github.io/pics/3.scatter_plot.png" width="270px">
 
 </div>
 
