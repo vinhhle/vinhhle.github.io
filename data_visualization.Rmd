@@ -54,16 +54,16 @@ output:
 
 <div class="col3">
 
-<font size="4"><center>**[Test](https://vinhhle.github.io/kiel_temperature/)**</center></font>
+<font size="4"><center>**[Internet Users by Region](https://vinhhle.github.io/internet_wafflechart/)**</center></font>
 
-<img src="/Users/huvi/Desktop/vinhhle.github.io/pics/1.kiel_temperature.png" width="270px">
+<img src="/Users/huvi/Desktop/vinhhle.github.io/pics/internet_waffle_chart.png" width="270px">
 
 <br>
 
 
 <font size="4"><center>**[Test](https://vinhhle.github.io/data_viz/)**</center></font>
 
-<img src="/Users/huvi/Desktop/vinhhle.github.io/pics/2.migration_flow_chord_diagram.png" width="270px">
+<img src="/Users/huvi/Desktop/vinhhle.github.io/pics/test.png" width="270px">
 
 <br>
 
