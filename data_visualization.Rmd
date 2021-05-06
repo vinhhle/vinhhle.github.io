@@ -30,7 +30,7 @@ output:
 <br>
 
 
-<font size="4"><center>**[Migration Flows in Europe](https://vinhhle.github.io/data_viz/)**</center></font>
+<font size="4"><center>**[Migration Flows in Europe](https://vinhhle.github.io/migration_chord/)**</center></font>
 
 <img src="/Users/huvi/Desktop/vinhhle.github.io/pics/2.migration_flow_chord_diagram.png" width="270px">
 
