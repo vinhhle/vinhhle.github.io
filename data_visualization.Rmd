@@ -61,15 +61,15 @@ output:
 <br>
 
 
-<font size="4"><center>**[Food Vitamin and Mineral Composition](https://vinhhle.github.io/food_radarchart/)**</center></font>
+<font size="4"><center>**[Food Mineral Composition](https://vinhhle.github.io/food_radarchart/)**</center></font>
 
 <img src="/Users/huvi/Desktop/vinhhle.github.io/pics/food_radarchart.png" width="270px">
 
 <br>
 
-<font size="4"><center>**[Test](https://vinhhle.github.io/data_viz/)**</center></font>
+<font size="4"><center>**[Working ...](https://vinhhle.github.io/data_viz/)**</center></font>
 
-<img src="/Users/huvi/Desktop/vinhhle.github.io/pics/3.world_scatterplot.gif" width="270px">
+<img src="/Users/huvi/Desktop/vinhhle.github.io/pics/food_radarchart.png" width="270px">
 
 </div>
 
