@@ -1,0 +1,15 @@
+---
+title: "Data Visualization"
+description: |
+  Here is a collection of graphs that I created with ggplot2
+author:
+  - name: Nora Jones 
+    url: https://example.com/norajones
+date: "`r Sys.Date()`"
+---
+
+
+| | | 
+|:-------------------------:|:-------------------------:|
+| <img width="500" height="350" alt="screen shot 2017-08-07 at 12 18 15 pm" src= "https://lh3.googleusercontent.com/pw/AL9nZEWOJWBOSmJOHrwx82t-FGhuqA97EoexUli9UxIu5LOoovNKc7krtSVvyZ6I15kVQnvAi-7yIU-d1WRaEYjIhmsHrU9x8NBJlW0OyQ_1KTWzgR273xLAn1JaE1wYYGG5TyPNsLFuoN9ArZ2r41elAXrO=w1750-h1081-no"> **[Code]()**|<img width="500" height="350" alt="screen shot 2017-08-07 at 12 18 15 pm" src="https://lh3.googleusercontent.com/pw/AL9nZEVBHhO75uim953ACsi03HbmbjwrVc9-nK1HmAFOAkKQjxrSX6sEb7cRtdET9CPqVoBYMRL5-omd8OEvLd8lY1ZDmOV5F3z7gtwejG3ohkqxIxp71pCnbJ2AOIfqw4WHkcYK1LxcB38lRgHnp_vxf5VX=w2268-h1516-no">  **[Belgium](https://photos.app.goo.gl/cdhVZx5kDo6VQgzh6)**| 
+| <img width="500" height="350" alt="screen shot 2017-08-07 at 12 18 15 pm" src="https://lh3.googleusercontent.com/pw/AL9nZEXf4OVQwQmgohCYMRhUDvDhNhz2NTuSYN8lUEvQsH7uZzIioGUoUf4ZrRAcOFoxVSYrHQA626bwkCd5cArBGcN-zpKcc13bJVXq6vzD5zhDGm7aV1D1-eBslqHiW-IkDxGMq6GfNoqMATv4nCfoL92i=w2268-h1516-no"> **🇩🇰 [Denmark](https://photos.app.goo.gl/UrX9c24aHVJ1QrtM8)**|<img width="500" height="350" alt="screen shot 2017-08-07 at 12 18 15 pm" src="https://lh3.googleusercontent.com/pw/AL9nZEUTDQtuAjgOeS08rFL8wmwH9Ud8xxeL--5wKcFgrO98aM90hyGFn71b05OaqTOV3LqPcGJJwllyN9-jKqpms-u7f79fi8_fpnSk2pf4cDmXgkVqjurswa2UrleXKbC8rSIMgOZelv5oTZUu1ddKNNUi=w2269-h1514-no">  **🇫🇷[France](https://photos.app.goo.gl/fio2ZdszKRR6BXi28)**| 

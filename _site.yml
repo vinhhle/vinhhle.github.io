@@ -1,0 +1,22 @@
+name: "blog"
+title: "Vinh Hung Le"
+description: |
+  Vinh Hung Le
+output_dir: "."
+navbar:
+  logo:
+    image: /Users/huvi611/Desktop/vinhhle.github.io/images/logo.png
+    href: vinhhle.github.io
+  right:
+    - text: "home"
+      href: index.html
+    - text: "tableau projects"
+      href: https://public.tableau.com/app/profile/vinh.hung.le7673
+    - text: "data viz"
+      href: https://photos.app.goo.gl/qZs4dVRQuHwb2BTz8
+    - text: "travel"
+      href: travel.html
+    - text: "about"
+      href: about.html  
+  search: true
+output: distill::distill_article

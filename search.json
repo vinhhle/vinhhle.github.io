@@ -1,0 +1,40 @@
+{
+  "articles": [
+    {
+      "path": "about.html",
+      "title": "Vinh Hung Le",
+      "author": [],
+      "contents": "\n\n          \n          \n          \n          \n          Vinh Hung Le\n          \n          \n          home\n          tableau projects\n          data viz\n          travel\n          about\n          ☰\n          \n          \n      \n        \n          \n            \n              \n            \n              Vinh Hung Le\n            \n            \n              \n                \n                    \n                      \n                        GitHub\n                      \n                    \n                  \n                                    \n                    \n                      \n                        Email\n                      \n                    \n                  \n                                  \n            \n          \n        \n        \n        \n          \n            Moin moin!\n            My name is Vinh, a master student of Quantitative\n            Economics, majoring in statistics and econometrics, from\n            Kiel University.\n            This personal blog is a small project to apply what I’ve\n            learned from lectures, books, and online courses. I use\n            Python (pandas) for data wrangling and R\n            (ggplot2) for data visualization.\n            When not studying or working, I enjoy reading, playing\n            guitar, taking pictures, traveling, and playing\n            badminton.\n            \n            Education\n            Kiel University | Kiel, Germany\n            M.S. in Quantitative Economics | 2019 - 2022\n            Foreign Trade University | Ho Chi Minh\n            City, Vietnam\n            B.S. in Business Administration | 2012 - 2016\n            \n          \n        \n      \n    \n\n    \n      \n        \n          \n            \n              \n            \n              Vinh Hung Le\n            \n            \n              \n                \n                                    \n                    \n                      GitHub\n                    \n                  \n                                    \n                    \n                      Email\n                    \n                  \n                                  \n              \n            \n            \n              Moin moin!\n              My name is Vinh, a master student of Quantitative\n              Economics, majoring in statistics and econometrics, from\n              Kiel University.\n              This personal blog is a small project to apply what\n              I’ve learned from lectures, books, and online courses. I\n              use Python (pandas) for data wrangling and R\n              (ggplot2) for data visualization.\n              When not studying or working, I enjoy reading, playing\n              guitar, taking pictures, traveling, and playing\n              badminton.\n              \n              Education\n              Kiel University | Kiel, Germany\n              M.S. in Quantitative Economics | 2019 - 2022\n              Foreign Trade University | Ho Chi Minh\n              City, Vietnam\n              B.S. in Business Administration | 2012 - 2016\n              \n            \n        \n      \n    \n\n    \n    \n    ",
+      "last_modified": "2023-05-04T09:10:31+02:00"
+    },
+    {
+      "path": "dataviz.html",
+      "title": "Data Visualization",
+      "description": "Here is a collection of graphs that I created with ggplot2\n",
+      "author": [
+        {
+          "name": "Nora Jones",
+          "url": "https://example.com/norajones"
+        }
+      ],
+      "date": "`r Sys.Date()`",
+      "contents": "\nCode\nBelgium\n🇩🇰 Denmark\n🇫🇷France\n\n\n\n",
+      "last_modified": "2023-05-04T09:10:32+02:00"
+    },
+    {
+      "path": "index.html",
+      "title": "Vinh Hung Le",
+      "author": [],
+      "contents": "\n\n\n\n",
+      "last_modified": "2023-05-04T09:10:32+02:00"
+    },
+    {
+      "path": "travel.html",
+      "title": "The world through my lens 🌏",
+      "author": [],
+      "contents": "\n🇦🇹 Austria\n🇧🇪Belgium\n🇨🇿 Czech Republic\n🇩🇰 Denmark\n🇫🇷France\n🇩🇪 Germany\n🇭🇺Hungary\n🇱🇺Luxembourg\n🇳🇱Netherlands\n🇳🇴Norway\n🇵🇱Poland\n🇸🇪Sweden\n🇸🇬Singapore\n🇸🇰Slovakia\n🇻🇳 Vietnam\n🇦🇩 Andorra\n🇪🇸Spain\n🇲🇹Malta\n\n\n\n",
+      "last_modified": "2023-05-04T09:10:33+02:00"
+    }
+  ],
+  "collections": ["posts/posts.json"]
+}

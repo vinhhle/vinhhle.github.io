@@ -1,0 +1,29 @@
+---
+title: "Vinh Hung Le"
+image: "/Users/huvi611/Desktop/vinhhle.github.io/images/about_me.png"
+links:
+  - label: GitHub
+    url: "https://github.com/vinhhle/"
+  - label: Email
+    url: "lhvinh611@gmail.com"
+output:
+  postcards::trestles
+---
+ 
+Moin moin!
+
+My name is Vinh, a master student of Quantitative Economics, majoring in statistics and econometrics, from Kiel University.
+
+This personal blog is a small project to apply what I’ve learned from lectures, books, and online courses. I use Python (`pandas`) for data wrangling and R (`ggplot2`) for data visualization. 
+
+When not studying or working, I enjoy reading, playing guitar, taking pictures, traveling, and playing badminton.
+
+## Education
+
+**Kiel University** | Kiel, Germany
+
+M.S. in Quantitative Economics | 2019 - 2022
+
+**Foreign Trade University** | Ho Chi Minh City, Vietnam
+
+B.S. in Business Administration | 2012 - 2016
