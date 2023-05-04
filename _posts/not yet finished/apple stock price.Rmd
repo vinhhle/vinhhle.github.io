@@ -1,0 +1,102 @@
+---
+title: "Extract and Visualize Data for Apple Inc. Stock from NASDAQ with REST APIs"
+author:
+  - name: Vinh Hung le 
+    url: vinhhle.github.io
+date: 12/21/2022
+output: 
+  distill::distill_article:
+    toc: true
+    toc_depth: 2
+preview: https://images.pexels.com/photos/1334598/pexels-photo-1334598.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2
+---
+
+```{r}
+# import necessary libraries
+library(ggplot2)
+library(reticulate) # for running python code
+library(patchwork) # for combining graphes into a single one
+#py_install("requests")
+#(RETICULATE_PYTHON = "/Users/huvi611/Library/r-miniconda-arm64/envs/r-reticulate/bin/python")
+
+reticulate::use_python(Sys.which("python"))
+
+library(reticulate) 
+use_condaenv("r-reticulate")
+py_install("pandas", pip = TRUE)
+
+py_module_available("pandas")
+
+```
+
+# Overview of APIs
+
+Firstly, let's learn some background knowledge. What is an API, an HTTP request, or a REST API?
+
+API stands for **Application Programming Interface**. It is a set of rules serving as a link/messenger between your application and another service (such as AirBnB, Netflix, Spotify, or NASDAQ). We can see an API as a waiter in a restaurant, who get requests from the customer, tell the kitchen, and then bring foods back to the customer.
+
+In this case, we want to write an application to extract data from NASDAQ. An API determines how we can access the data and which data NASADQ may return. 
+
+When we enter a web address, the browser will send a request to this serve and return the website's content. This process is done by HTTP (Hypertext Transfer Protocol), which helps deal with requests and responses between you (a client) and a server. An **HTTP request** is simply the message that you send to the server. It specifies how requests and responses are to be formatted and transmitted.
+
+There are different types of HTTP request methods, which determine the desired action after a request. For example:  
+- GET: to obtain data from a server  
+- POST: to add new data to the serve 
+
+REST API is a type of API that communicates with web services by HTTP requests. From the perspective of Python, it can be seen as a data source on an Internet address that we may access. 
+
+# Extract NASDAQ data with REST API
+
+Based in New York City, NASADQ is one of the biggest stock exchanges in the world, where the stocks of giant companies like Facebook, Apple, Microsoft, or Tesla are traded every day. Billions of economic and financial data points on this platform can be access through different tools, including APIs.
+
+In this project, we will write codes to send an HTTP GET request to NASDAQ server through the use of its REST API. It will return the selected data with stock information, such as prices or volumes.
+
+To work with REST API on Python, we'll use the `requests` library. 
+
+```{python}
+import requests
+```
+
+First, we need to visit the [Financial Data API](https://data.nasdaq.com/tools/api) by NASADQ to know the API format and the exact URL to extract the data. Based on the documentation, we can easily get the data of a stock by making a GET request to the following url: `https://data.nasdaq.com/api/v3/datasets/WIKI/(1).(2)`, with:  
+- (1) is the ticker symbol, an abbreviation for the stock. For example: AAPL for Apple, MSFT for Microsoft  
+- (2) is the output format. NASAD supports `json`, `csv`, and `xml`
+
+To get the data for Apple stock in the `json` format, we can set up the url as `https://data.nasdaq.com/api/v3/datasets/WIKI/AAPL.json`.
+
+We can also add some parameters to the url to filter, transform, or customize the obtained data. For instance: `https://data.nasdaq.com/api/v3/datasets/WIKI/AAPL.json?start_date=2020-01-01&end_date=2020-12-31` will limit the data from 01.01.2020 to 31.12.2020. For more options, visit this [link](https://docs.data.nasdaq.com/docs/parameters-2). 
+
+Next, let's make an API request
+
+```{python}
+url = "https://data.nasdaq.com/api/v3/datasets/WIKI/AAPL.json?start_date=2010-01-01?end_date=2022-01-01"
+response = requests.get(url)
+response
+```
+The responses from the server is 200, meaning it was proceeded successfully. The 404 response means the server cannot be found or accessed. As specified in the url, the data will be returned as a JSON file. 
+
+```{python}
+response.json().keys()
+```
+```{python}
+import pandas as pd
+
+apple = pd.DataFrame(response.json()['dataset']['data'], columns = response.json()['dataset']['column_names'])
+```
+
+# Clean data
+
+```{python}
+apple
+```
+
+
+# Visualize
+
+
+```{r}
+py_install("pandas")
+```
+>200
+Apple: grey
+Tesla: red
+Facebook: blue

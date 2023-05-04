@@ -1,0 +1,545 @@
+---
+title: "Predict income with logistic regression and two-class classification"
+author:
+  - name: Vinh Hung le 
+    url: vinhhle.github.io
+date: 08/14/2021
+output: 
+  distill::distill_article:
+    toc: true
+    toc_depth: 2
+
+---
+
+# Data Cleaning
+
+In this project, we'll work with the [1994 Census database](https://archive.ics.uci.edu/ml/datasets/Adult) done by Barry Becker. Our task is to predict whether the annual income of an individual is high (greater than $50,000) using provided features. 
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+library(cowplot)
+library(plyr)
+library(ROCR)
+library(plotly)
+font = "Avenir Next"
+text_color = "#353D42"
+adult <- read.table('https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data', 
+                    sep = ',', 
+                    fill = F, 
+                    strip.white = T) %>% 
+  drop_na()
+colnames(adult) <- c('age', 'work', 'fnlwgt', 'edu', 'edu_num', 'marital', 'job', 'relationship', 
+                     'race', 'sex', 'capital_gain', 'capital_loss', 'hours', 'nation', 'income')
+rmarkdown::paged_table(adult)
+```
+
+There are 32,561 observations with 15 variables in the dataset. Most of the variables are self-explanatory themselves. 
+## Removing variables
+
+To simplify the analysis, we may drop some unnecessary variables, including `fnlwgt` (standing for final weight), `edu` (represented by `edu_num`), and `relationship` (represented by `marital` and `sex`). 
+
+```{r}
+adult <- adult %>%
+  select(!c(fnlwgt, edu, relationship))
+```
+
+The variable `nation` represents the native country of the individuals. Let's see where they come from.  
+
+```{r}
+adult %>% 
+  group_by(nation) %>% 
+  dplyr::summarize(
+    count = n()
+  ) %>% 
+  arrange(desc(count))
+```
+
+Nearly 90% of individuals in the dataset come from the US. Thus, we may exclude observations from other countries and then drop the `nation` variable for simpler analysis. 
+
+```{r}
+adult_us <- adult %>% 
+  filter(nation == "United-States") %>% 
+  select(!nation)
+```
+
+The two continuous variables `capital_gain` and `capital_loss` represent the money each individual gained or lost from their financial investments.  
+
+```{r warning = FALSE, message = FALSE, fig.align='center'}
+loss <- ggplot(adult_us, aes(x = capital_loss, group = income, fill = income)) +
+  geom_histogram(bins = 10, colour = "white") +
+  scale_y_discrete(expand = c(0,0)) +
+  scale_x_continuous(expand = c(0,0), name = "loss (USD)")+
+  scale_fill_manual(values = c("#0072B2", "#D55E00")) +
+  theme(
+    panel.background = element_blank(),
+    axis.line.x = element_line(size = 0.2, color = text_color),
+    axis.ticks = element_blank(),
+    axis.text = element_text(family = font, color = text_color, size = 11),
+    axis.title = element_text(family = font, color = text_color, size = 11), 
+    legend.position = "none"
+  )
+gain <- ggplot(adult_us, aes(x = capital_gain, group = income, fill = income)) +
+  geom_histogram(bins = 10, colour = "white") +
+  scale_y_discrete(expand = c(0,0)) +
+  scale_x_continuous(expand = c(0,0), name = "gain (USD)")+
+  scale_fill_manual(values = c("#0072B2", "#D55E00")) +
+  theme(
+    panel.background = element_blank(),
+    axis.line.x = element_line(size = 0.2, color = text_color),
+    axis.ticks = element_blank(),
+    axis.text = element_text(family = font, color = text_color, size = 11),
+    axis.text.y = element_blank(),
+    axis.title = element_text(family = font, color = text_color, size = 11),
+    legend.position = c(0.5, 0.5),
+    legend.text = element_text(family = font, color = text_color, size = 11),
+    legend.title = element_text(family = font, color = text_color, size = 11)
+  )
+plot_grid(
+  loss, NULL, gain,
+  nrow = 1, align = 'hv', rel_widths = c(1, .04, 1, .04, 1))
+```
+
+Both graphs are highly skewed to the left, meaning that almost all people have zero capital gain or loss. Therefore, we can also drop both variables from the dataset for simpler analysis.
+
+```{r}
+adult_us <- adult_us %>% 
+  select(!c(capital_gain, capital_loss))
+```
+
+## Re-grouping
+
+The variable `work` represents the industry in which individuals are working. We can group 9 levels into 4 levels: government, private, self_employed, and others.
+
+The variable `marital` represents the marital status of individuals. We can group 7 levels into 5 levels: single, married, separate, divorced, and widowed.
+
+The variable `job` represents the occupation of individuals. We can group 15 levels into 6 levels: white collar, blue collar, service, professional, sales, and and widowed.
+
+```{r}
+adult_us <- adult_us %>%
+  mutate(
+    work = case_when(
+      work == "?" ~ "others",
+      work == "Never_worked" ~ "others",
+      work == "Without-pay" ~ "others",
+      work == "Federal-gov" ~ "gov",
+      work == "Local-gov" ~ "gov",
+      work == "State-gov" ~ "gov",
+      work == "Self-emp-inc" ~ "self-emp",
+      work == "Self-emp-not-inc" ~ "self-emp",
+      work == "Private" ~ "private",
+      TRUE ~ "others"
+    ),
+    marital = case_when(
+      marital == "Divorced" ~ "divorced",
+      marital == "Married-AF-spouse" ~ "married",
+      marital == "Married-civ-spouse" ~ "married",
+      marital == "Married-spouse-absent" ~ "married",
+      marital == "Never-married" ~ "single",
+      marital == "Separated" ~ "separate",
+      marital == "Widowed" ~ "widowed"
+    ),
+    job = case_when(
+      job == "?" ~ "others",
+      job == "Adm-clerical" ~ "white-collar",
+      job == "Armed-Forces" ~ "others",
+      job == "Craft-repair" ~ "blue-collar",
+      job == "Exec-managerial" ~ "white-collar",
+      job == "Farming-fishing" ~ "blue-collar",
+      job == "Handlers-cleaners" ~ "blue-collar",
+      job == "Machine-op-inspct" ~ "blue-collar",
+      job == "Other-service" ~ "service",
+      job == "Priv-house-serv" ~ "service",
+      job == "Prof-specialty" ~ "professional",
+      job == "Protective-serv" ~ "service",
+      job == "Sales" ~ "sales",
+      job == "Tech-support" ~ "service",
+      job == "Transport-moving" ~ "blue-collar"
+    )
+  ) 
+```
+
+The dataset now contains 29,170 observations with 9 variables.
+
+```{r}
+summary(adult_us)
+```
+
+# Data Exploratory Analysis
+
+## Age
+
+```{r warning = FALSE, message = FALSE, fig.align='center', fig.asp = 0.7}
+ggplot(adult_us, aes(x = age, group = income, fill = income)) +
+  geom_histogram(binwidth = 2, colour = "white") +
+  scale_y_discrete(expand = c(0,0)) +
+  scale_x_continuous(expand = c(0,0), name = "age")+
+  scale_fill_manual(values = c("#0072B2", "#D55E00")) +
+  theme(
+    panel.background = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text = element_text(family = font, color = text_color, size = 11),
+    axis.title = element_text(family = font, color = text_color, size = 11),
+    legend.position = c(0.8, 0.6),
+    legend.text = element_text(family = font, color = text_color, size = 11),
+    legend.title = element_text(family = font, color = text_color, size = 11)
+  )
+```
+The graph shows that most individuals earn fewer than $50,000 per year. In the low-income group, incomes tend to increase with age. In the high-income group, most are in their mid-career, ranging between 30 and 50 years old. 
+
+## Work class
+
+```{r}
+adult_work <- adult_us %>% 
+  group_by(work, income) %>% 
+  tally() %>% 
+  arrange(work, income)%>% 
+  mutate(income = factor(income, levels = c(">50K", "<=50K"))) %>% 
+  group_by(work) %>% 
+  dplyr::mutate(percentage = round(n/sum(n)*100, 1)) 
+work <- ggplot(adult_work, aes(x = work, y = percentage, fill = income)) +
+  geom_col(position = "stack", color = "white", size = 0.3, width = 1) +
+  scale_x_discrete(expand = c(0,0), name = NULL) +
+  scale_y_continuous(expand = c(0,0), name = "percentage") +
+  coord_cartesian(clip = "off") +
+  scale_fill_manual(values = c("#D55E00", "#0072B2"),
+                    breaks = c(">50K", "<=50K"),
+                    labels = c("high income", "low income"),
+                    name = NULL) +
+  theme(panel.background = element_blank(),
+        panel.grid.major.y = element_line(color = "#cbcbcb", size = 0.5),
+        axis.text = element_text(family = font, color = text_color, size = 11),
+        axis.title = element_text(family = font, color = text_color, size = 11),
+        axis.text.x = element_text(margin = margin(t = 15)),
+        axis.ticks = element_blank(),
+        legend.text = element_text(family = font, color = text_color, size = 11),
+        legend.position = "bottom",
+        legend.justification = "center",
+        legend.spacing.x = grid::unit(7, "pt"),
+        legend.spacing.y = grid::unit(0, "cm")
+    )
+ggplotly(work, dynamicTicks = TRUE, tooltip = "y") %>% 
+  layout(hovermode = "x") 
+```
+
+The chart shows that selt-employed individuals tend to have higher incomes, followed by government and private.
+
+## Education
+
+```{r}
+adult_edu <- adult_us %>% 
+  group_by(edu_num, income) %>% 
+  tally() %>% 
+  arrange(edu_num, income)%>% 
+  mutate(income = factor(income, levels = c(">50K", "<=50K"))) %>% 
+  group_by(edu_num) %>% 
+  dplyr::mutate(percentage = round(n/sum(n)*100, 1)) 
+edu <- ggplot(adult_edu, aes(x = edu_num, y = percentage, fill = income)) +
+  geom_col(position = "stack", color = "white", size = 0.3, width = 1) +
+  scale_x_continuous(expand = c(0,0), name = NULL, seq(0,16,1)) +
+  scale_y_continuous(expand = c(0,0), name = "count") +
+  coord_cartesian(clip = "off") +
+  scale_fill_manual(values = c("#D55E00", "#0072B2"),
+                    breaks = c(">50K", "<=50K"),
+                    labels = c("high income", "low income"),
+                    name = NULL) +
+  theme(panel.background = element_blank(),
+        panel.grid.major.y = element_line(color = "#cbcbcb", size = 0.5),
+        axis.text = element_text(family = font, color = text_color, size = 11),
+        axis.title = element_text(family = font, color = text_color, size = 11),
+        axis.text.x = element_text(margin = margin(t = 15)),
+        axis.ticks = element_blank(),
+        legend.text = element_text(family = font, color = text_color, size = 11),
+        legend.position = "bottom",
+        legend.justification = "center",
+        legend.spacing.x = grid::unit(7, "pt"),
+        legend.spacing.y = grid::unit(0, "cm")
+    )
+ggplotly(edu, tooltip = "y") %>% 
+  layout(hovermode = "x") 
+```
+
+It is very obvious that the chance of earning more than $50,000 increases with levels of education. 
+
+## Marital status
+
+```{r}
+adult_marital <- adult_us %>% 
+  group_by(marital, income) %>% 
+  tally() %>% 
+  arrange(marital, income)%>% 
+  mutate(income = factor(income, levels = c(">50K", "<=50K"))) %>% 
+  group_by(marital) %>% 
+  mutate(percentage = round(n/sum(n)*100, 1)) 
+edu <- ggplot(adult_marital, aes(x = marital, y = percentage, fill = income)) +
+  geom_col(position = "stack", color = "white", size = 0.3, width = 1) +
+  scale_x_discrete(expand = c(0,0), name = NULL) +
+  scale_y_continuous(expand = c(0,0), name = "count") +
+  coord_cartesian(clip = "off") +
+  scale_fill_manual(values = c("#D55E00", "#0072B2"),
+                    breaks = c(">50K", "<=50K"),
+                    labels = c("high income", "low income"),
+                    name = NULL) +
+  theme(panel.background = element_blank(),
+        panel.grid.major.y = element_line(color = "#cbcbcb", size = 0.5),
+        axis.text = element_text(family = font, color = text_color, size = 11),
+        axis.title = element_text(family = font, color = text_color, size = 11),
+        axis.text.x = element_text(margin = margin(t = 15)),
+        axis.ticks = element_blank(),
+        legend.text = element_text(family = font, color = text_color, size = 11),
+        legend.position = "bottom",
+        legend.justification = "center",
+        legend.spacing.x = grid::unit(7, "pt"),
+        legend.spacing.y = grid::unit(0, "cm")
+    )
+ggplotly(edu, tooltip = "y") %>% 
+  layout(hovermode = "x") 
+```
+
+Nearly a half of married individuals earn high income, while single and separate people are not very likely to earn more than $50,000 a year.
+
+## Occupation
+
+```{r}
+adult_job <- adult_us %>% 
+  group_by(job, income) %>% 
+  tally() %>% 
+  arrange(job, income)%>% 
+  mutate(income = factor(income, levels = c(">50K", "<=50K"))) %>% 
+  group_by(job) %>% 
+  mutate(percentage = round(n/sum(n)*100, 1)) 
+job <- ggplot(adult_job, aes(x = job, y = percentage, fill = income)) +
+  geom_col(position = "stack", color = "white", size = 0.3, width = 1) +
+  scale_x_discrete(expand = c(0,0), name = NULL) +
+  scale_y_continuous(expand = c(0,0), name = "count") +
+  coord_cartesian(clip = "off") +
+  scale_fill_manual(values = c("#D55E00", "#0072B2"),
+                    breaks = c(">50K", "<=50K"),
+                    labels = c("high income", "low income"),
+                    name = NULL) +
+  theme(panel.background = element_blank(),
+        panel.grid.major.y = element_line(color = "#cbcbcb", size = 0.5),
+        axis.text = element_text(family = font, color = text_color, size = 11),
+        axis.title = element_text(family = font, color = text_color, size = 11),
+        axis.text.x = element_text(margin = margin(t = 15)),
+        axis.ticks = element_blank(),
+        legend.text = element_text(family = font, color = text_color, size = 11),
+        legend.position = "bottom",
+        legend.justification = "center",
+        legend.spacing.x = grid::unit(7, "pt"),
+        legend.spacing.y = grid::unit(0, "cm")
+    )
+ggplotly(job, tooltip = "y") %>% 
+  layout(hovermode = "x") 
+```
+
+People with professional occupations have the highest chance earning high income, followed by white collar and sales. Blue collar and service individuals have lower chances.
+
+## Race
+
+```{r}
+adult_race <- adult_us %>% 
+  group_by(race, income) %>% 
+  tally() %>% 
+  arrange(race, income)%>% 
+  mutate(income = factor(income, levels = c(">50K", "<=50K"))) %>% 
+  group_by(race) %>% 
+  mutate(percentage = round(n/sum(n)*100, 1)) 
+race <- ggplot(adult_race, aes(x = race, y = percentage, fill = income)) +
+  geom_col(position = "stack", color = "white", size = 0.3, width = 1) +
+  scale_x_discrete(expand = c(0,0), name = NULL) +
+  scale_y_continuous(expand = c(0,0), name = "count") +
+  coord_cartesian(clip = "off") +
+  scale_fill_manual(values = c("#D55E00", "#0072B2"),
+                    breaks = c(">50K", "<=50K"),
+                    labels = c("high income", "low income"),
+                    name = NULL) +
+  theme(panel.background = element_blank(),
+        panel.grid.major.y = element_line(color = "#cbcbcb", size = 0.5),
+        axis.text = element_text(family = font, color = text_color, size = 8),
+        axis.title = element_text(family = font, color = text_color, size = 11),
+        axis.text.x = element_text(margin = margin(t = 15)),
+        axis.ticks = element_blank(),
+        legend.text = element_text(family = font, color = text_color, size = 11),
+        legend.position = "bottom",
+        legend.justification = "center",
+        legend.spacing.x = grid::unit(7, "pt"),
+        legend.spacing.y = grid::unit(0, "cm")
+    )
+ggplotly(race, tooltip = "y") %>% 
+  layout(hovermode = "x") 
+```
+
+The graph shows that white and Asian-Pacific-Islander individuals have higher chance of earning high income than people from other race groups. 
+
+# Modelling 
+
+Before modelling the dataset, two things need to be done:
+
+1. Convert the variable `income` into numeric values: 0 for low income and 1 for high income
+2. Divide the dataset into two parts: 80% for training and 20% for testing
+
+```{r}
+adult_us <- adult_us %>% 
+  mutate(
+    income = case_when(
+      income == "<=50K" ~ 0,
+      income == ">50K" ~ 1
+    )
+  )
+set.seed(1)
+train <- sample(nrow(adult_us), nrow(adult_us)*0.7)
+adult_train <- adult_us[train,]
+adult_test <- adult_us[-train,]
+```
+
+## Overview of logistic regression
+
+In logistic regression, we measure the probability of the dependent variable `income` based on other variables. For example, given the age, marital status, working hour, race, .etc the model can predict the probability of an individual having a high income.
+
+The losgistic function is as following:
+
+$p(income) = \frac{e^{β_{0} + β_{1}age + β_{2}work + β_{3}edu.num+ β_{4}marital+ β_{5}job+ β_{6}race+ β_{7}sex+ β_{8}hours}}{1 + e^{β_{0} + β_{1}age + β_{2}work + β_{3}edu.num+ β_{4}marital+ β_{5}job+ β_{6}race+ β_{7}sex+ β_{8}hours}}$
+
+The output of this function ranges between 0 and 1. We can estimate the coefficients by using **maximum likelihood**.
+
+## Simple logistic regression
+
+Let's start with predict `income` based on the number of education years. The above model is simplified as:
+
+$p(income|edunum) = \frac{e^{β_{0} + β_{1}edunum}}{1 + e^{β_{0} + β_{1}edunum}}$
+
+```{r}
+logis.edu <- glm(income ~ edu_num, data = adult_train, family = binomial)
+summary(logis.edu)
+```
+
+Based on the results, the model becomes:
+
+$p(income|edunum) = \frac{e^{-5.12 + 0.37*edunum}}{1 + e^{-5.12 + 0.37*edunum}}$
+
+The coefficient $β_{1}$ = 0.37 > 0 implies that people with more years of education are more likely to earn higher income. This confirms what we found out in the exploratory analysis. 
+
+The model can also help us compare the probability of having high income in two individuals. Take an example with 10 and 15 years of education:
+
+$p(income|edunum = 5) = \frac{e^{-5.12 + 0.37*10}}{1 + e^{-5.12 + 0.37*10}} = 19.5%$
+
+$p(income|edunum = 10) = \frac{e^{-5.12 + 0.37*15}}{1 + e^{-5.12 + 0.37*15}} = 60.6%$
+
+People with 10 years of education only have 19.5% of earning a high income, while the number for those with 15 years of education is up to 60.6%. The difference is very clear. 
+
+How about `income` by gender? 
+
+```{r}
+logis.sex <- glm(income ~ sex, data = adult_train, family = binomial)
+logis.sex
+```
+
+Based on the results, the model becomes:
+
+$p(income|sex) = \frac{e^{-2.093 + 1.305*sex}}{1 + e^{-2.093 + 1.305*sex}}$
+
+The coefficient $β_{1}$ = 1.305 > 0 implies that men tend to have higher income than women. More specifically:
+
+$p(income|sex = 1/men) = \frac{e^{-2.093 + 1.305*1}}{1 + e^{-2.093 + 1.305*1}} = 31.3%$
+
+$p(income|sex = 0/women) = \frac{e^{-2.093 + 1.305*0}}{1 + e^{-2.093 + 1.305*0}} = 11%$
+
+## Multiple logistic regression
+
+Now we predict `income` using all variables in the dataset.
+
+```{r}
+logis_all <- glm(income ~ ., data = adult_train, family = binomial("logit"))
+summary(logis_all)
+```
+
+We can use the model to predict `income` in the test dataset. To measure the accuracy of the model, we take a look at the **confusion matrix**, which summarizes the decision possibilities. 
+
+```{r}
+confusion <- data.frame(predicted_no = c("True Negative", "False Positive","Actual No"),
+           predicted_yes = c("False Negative", "True Positive","Actual Yes"),
+           "3" = c("Predicted No", "Predicted Yes","Total"), 
+           row.names = c("actual_no", "actual_yes", "")
+           )
+colnames(confusion) = c("predicted_no", "predicted_no", "")
+confusion
+```
+
+```{r}
+predicted <- predict(logis_all, newdata = adult_test, type = "response")
+glm.pred = rep(1, nrow(adult_test))
+glm.pred[as.numeric(predicted) <= 0.5] = 0
+confusion_matrix <- table(glm.pred, adult_test$income)
+colnames(confusion_matrix) <- c("predicted:0", "predicted:1")
+rownames(confusion_matrix) <- c("actual:0", "actual:1")
+confusion_matrix
+```
+
+## Key metrics
+
+Some important things that we need to know about the above logistic regression model:
+
+1. **Accuracy**: how often is the classifier correct?
+
+```{r}
+accuracy = (confusion_matrix[1] + confusion_matrix[4])/sum(confusion_matrix)
+accuracy
+```
+
+The accuracy of the model is up to 82.3%, which is very high. However, it can be sometimes misleading, especially when the prevalence is extremely high or low.
+
+2. **Error rate**: how often is the classifier wrong?
+
+```{r}
+error = (confusion_matrix[2] + confusion_matrix[3])/sum(confusion_matrix)
+error
+```
+
+3. **Prevalence**: how often does the yes occur in the sample
+
+```{r}
+prevalence = (confusion_matrix[2] + confusion_matrix[4])/sum(confusion_matrix)
+prevalence
+```
+
+4. **Precision**: how often is the classifier correct when prediction is yes
+
+```{r}
+prevalance = (confusion_matrix[2] + confusion_matrix[4])/sum(confusion_matrix)
+prevalance
+```
+
+## ROC and AUC
+
+**ROC** stands for Receiver Operating Curve. This curve is created by plotting true positive rate (sensitivity) against false positive rate. Below is the ROC of the above model.
+
+```{r message = FALSE, error = FALSE, fig.align = 'center', fig.asp = 1, out.width = '60%'}
+pr <- prediction(predicted, adult_test$income)
+prf <- performance(pr, measure = "tpr", x.measure = "fpr")
+dd <- data.frame(FP = prf@x.values[[1]], TP = prf@y.values[[1]])
+ggplot() +
+  geom_line(data = dd, aes(x = FP, y = TP, color = 'Logistic Regression')) +
+  geom_segment(aes(x = 0, xend = 1, y = 0, yend = 1)) +
+  scale_x_continuous(name = "false positive") +
+  scale_y_continuous(name = "true positive")+
+  theme(panel.background = element_blank(),
+        panel.grid.major = element_line(color = "#cbcbcb", size = 0.5),
+        axis.text = element_text(family = font, color = text_color, size = 11),
+        axis.title = element_text(family = font, color = text_color, size = 11),
+        axis.text.x = element_text(margin = margin(t = 15)),
+        axis.ticks = element_blank(),
+        legend.position = "none"
+  )
+```
+
+A ROC curve illustrates the price we have to pay in terms of false positive rate to increase the true positive rate. The further the ROC is away from the diagonal, the better. A perfect ROC curve passes through (0,1), meaning it can classify all positives correctly without any false positive.
+
+From the chart above, we can see the ROC behaves quite well, which suggests a good model for this dataset. 
+
+**AUC** stands for "Area Under the Curve", namely the area between the ROC. This value ranges from 0 to 1. However, it often lies between 0.5 and 1. AUC = 1 indicates a perfect classifier, while AUC = 0.5 indicates a random classifier.  
+
+```{r}
+performance(pr, measure = "auc")@y.values[[1]]
+```
+
+In this case, the model's AUC is 0.875. 

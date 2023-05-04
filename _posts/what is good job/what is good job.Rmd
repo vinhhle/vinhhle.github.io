@@ -1,0 +1,16 @@
+---
+title: "What is a good job? From the perspective of German employees"
+author:
+  - name: Vinh Hung le 
+    url: vinhhle.github.io
+date: 09/12/2022
+output: 
+  distill::distill_article:
+    toc: true
+    toc_depth: 2
+preview: https://images.pexels.com/photos/925786/pexels-photo-925786.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2
+---
+
+In this project, I'll use `pandas` to analyze the data from the German Institute for Economic Research to answer the question: "What is really a good job".
+
+**[Click here to view the project](https://github.com/vinhhle/what-is-good-job/blob/gh-pages/what-is-good-job.ipynb)**

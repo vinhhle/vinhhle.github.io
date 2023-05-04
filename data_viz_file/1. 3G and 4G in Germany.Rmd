@@ -1,0 +1,120 @@
+---
+title: "3G and 4G in Germany"
+output: html_document
+date: "2022-11-26"
+---
+
+```{r setup, include=FALSE}
+# import libraries
+library(ggplot2)
+library(ggtext)
+library(sf)
+library(rnaturalearth)
+library(reticulate)
+library(patchwork)
+library(ggtext)
+```
+
+```{python}
+# import and categorize data
+import pandas as pd
+df = (pd.read_csv("/Users/huvi611/Downloads/262", 
+            header = None,
+            usecols = [0,6,7, 11],
+            names = ["type", "lon", "lat", "added_time"])
+        .assign(added_time = lambda x: pd.to_datetime(x.added_time, unit = 's'))
+      )
+
+UMTS_3G =  df[df.type == "UMTS"]
+LTE_4G =  df[df.type == "LTE"]
+
+LTE_4G_2020 = LTE_4G[LTE_4G.added_time < "2020-01-01"]
+LTE_4G_2015 = LTE_4G[LTE_4G.added_time < "2015-01-01"]
+
+UMTS_3G_2020 = UMTS_3G[UMTS_3G.added_time < "2020-01-01"]
+UMTS_3G_2015 = UMTS_3G[UMTS_3G.added_time < "2015-01-01"]
+```
+
+```{r}
+# map data for germany from rnaturalearth
+germany <- ne_countries(scale = 'medium', type = 'map_units', returnclass = 'sf', country = 'Germany') 
+
+# convert to sf object and remove points outside germany
+LTE_4G_2020 = py$LTE_4G_2020 %>% st_as_sf(coords = c("lon", "lat"), crs = 4326)%>% st_intersection(germany) 
+LTE_4G_2015 = py$LTE_4G_2015 %>% st_as_sf(coords = c("lon", "lat"), crs = 4326)%>% st_intersection(germany)
+UMTS_3G_2020 = py$UMTS_3G_2020 %>% st_as_sf(coords = c("lon", "lat"), crs = 4326)%>% st_intersection(germany) 
+UMTS_3G_2015 = py$UMTS_3G_2015 %>% st_as_sf(coords = c("lon", "lat"), crs = 4326)%>% st_intersection(germany) 
+
+# labels for German cities
+city <- data.frame(city = c("Berlin", "Hamburg", "Munich", "Stuttgart", "Frankfurt", "Cologne"),
+                               lat = c(52.5200, 53.5488, 48.1351, 48.7758, 50.1109, 50.9375),
+                               long = c(13.4050, 9.9872, 11.5820, 9.1829, 8.6821, 6.9603))
+# map for 4G in 2015
+a = ggplot() + 
+  geom_sf(data = germany, fill = "black", color = "white", size = 0.3)+ 
+  geom_sf(data = LTE_4G_2015, shape = ".", color = "#0ceeff", alpha = 0.5) +
+  geom_text(data = city, aes(x=long, y=lat, label=city), size = 7, hjust=0, vjust=-1, color = "white", family = "Roboto Condensed") +
+  labs(
+    caption = "2015"
+  ) +
+  theme_void() +
+  theme(
+    plot.background = element_rect(fill = "black", color = "black"),
+    panel.background = element_rect(fill = "black", color = "black"),
+    plot.caption = element_text(color = "white", size = 40, hjust = .5, margin = margin(t = 5), family = "Roboto Condensed", face = "bold")
+  )
+
+# map for 4G in 2020
+b = ggplot() + 
+  geom_sf(data = germany, fill = "black", color = "white", size = 0.3)+ 
+  geom_sf(data = LTE_4G_2020, shape = ".", color = "#0ceeff", alpha = 0.5) +
+  labs(
+    caption = "2020"
+  ) +
+  theme_void() +
+  theme(
+    plot.background = element_rect(fill = "black", color = "black"),
+    panel.background = element_rect(fill = "black", color = "black"),
+    plot.caption = element_text(color = "white", size = 40, hjust = .5, margin = margin(t = 5), family = "Roboto Condensed", face = "bold")
+  )
+
+# map for 3G in 2015
+c = ggplot() + 
+  geom_sf(data = germany, fill = "black", color = "white", size = 0.3)+ 
+  geom_sf(data = UMTS_3G_2015, shape = ".", color = "#fff600", alpha = 0.5) +
+  labs(
+  ) +
+  theme_void() +
+  theme(
+    plot.background = element_rect(fill = "black", color = "black"),
+    panel.background = element_rect(fill = "black", color = "black")
+  )
+
+# map for 3G in 2020
+d = ggplot() + 
+  geom_sf(data = germany, fill = "black", color = "white", size = 0.3)+ 
+  geom_sf(data = UMTS_3G_2020, shape = ".", color = "#fff600", alpha = 0.5) +
+  labs(
+  ) +
+  theme_void() +
+  theme(
+    plot.background = element_rect(fill = "black", color = "black"),
+    panel.background = element_rect(fill = "black", color = "black")
+  )
+
+# combine maps
+a + b + c + d + plot_layout(nrow = 2) + plot_annotation(
+    title = 'Distribution of <span style="color:#fff600">3G</span> and <span style="color:#0ceeff">4G</span> cell towers in Germany between 2015 and 2020',
+    subtitle = "3G (UMTS) was first launched in Japan in 1998 with the internet boom and gradually replaced by 4G (LTE) since 2009.<br> 4G coverage is densly populated in urban areas and big cities. <br>3G is more widely available and still mostly used in rural locations.",
+    caption = 'Data: OpenCellID',
+    theme = theme(
+      plot.title = element_markdown(hjust = 0.5, size = 50, color = "white", margin = margin(t = 50), face = "bold", family = "Roboto Condensed"),
+      plot.subtitle = element_markdown(hjust = 0.5, size = 29, color = "white", margin = margin(t = 30, b = 10), family = "Roboto Condensed", lineheight = 1.2),
+      plot.caption = element_text(hjust = 0.5, size = 20, color = "white", margin = margin(b = 20), family = "Roboto Condensed"),
+      plot.background = element_rect(fill = "black", color = "black")
+      )
+    )
+
+# export 
+ggsave("test.png", width = 26, height = 30)
+```

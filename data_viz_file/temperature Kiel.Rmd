@@ -1,0 +1,118 @@
+---
+title: "Data_viz_1_astronaut"
+output: html_document
+date: "2022-11-26"
+---
+
+
+<font size ="5"><center> **2020 Daily Temperatures in Kiel, Germany**</center></font>
+
+----
+
+The two heatmaps show the daily maximum and minimum temperatures observed in Holtenau station in Kiel, Germany. All observations were record by [Deutscher Wetterdienst](www.dwd.de) in the period between 01.01.2020 and 31.01.2020
+
+**How to read the heatmap** 
+
+- The x-axis is a discrete scale that represents days of the month
+- The y-axis is a discrete scale that represents months of the year 
+- The color represents daily temperatures. I use the Oranges and Blues sequential color scale from [ColorBrewer](https://colorbrewer2.org/)) for maximum and minimum temperatures, respectively. 
+
+```{r message = FALSE, warning = FALSE, out.width = '100%', fig.align='center', fig.asp=0.6}
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+text_color = "#353d42"
+caption_color = "#666666"
+font = "Avenir Next"
+kiel_tem <- read.csv("/Users/huvi/Downloads/kiel_temperature.csv") %>% 
+  mutate(
+    tem_max = round((TMAX - 32)*5/9,1),
+    tem_min = round((TMIN - 32)*5/9,1) 
+  ) %>% 
+  mutate(
+    date = ymd(DATE),
+    year = year(date),
+    month = as.factor(month(date, label = TRUE)),
+    day = as.factor(day(date))
+  )%>% 
+  select(month, day, tem_max, tem_min)
+ggplot(kiel_tem, aes(x = day, y = month, fill = tem_max)) +
+  geom_tile(color = "#f0f0f0", size = 0.5) + #Color size of border between tiles
+  coord_equal() + # draw square instead of rectangular tiles
+  scale_x_discrete(name = NULL, position = "top") +
+  scale_y_discrete(expand = c(0, 0), name = NULL) +
+  scale_fill_distiller(
+    type = "seq",
+    palette = "Oranges",
+    direction = 1,
+    limits = c(1, 32),
+    name = "max temperature (°C)",
+    guide = guide_colorbar(
+      barwidth = grid::unit(2, "in"),
+      barheight = grid::unit(0.2, "in"),
+      title.position = "top",
+      title.hjust = 0.5
+    )
+  ) +
+  theme(
+    panel.background = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text = element_text(family = font, color = text_color, size = 7),
+    legend.title = element_text(family = font, color = text_color, size = 7),
+    legend.text = element_text(family = font, color = text_color, size = 7),
+    legend.position = "top",
+    legend.justification = "right",
+    plot.margin = margin(t = 0, b = 0, r = 0, l = 0)
+  )
+```
+
+```{r message = FALSE, warning = FALSE, out.width = '100%', fig.align='center', fig.asp=0.6}
+ggplot(kiel_tem, aes(x = day, y = month, fill = tem_min)) +
+  geom_tile(color = "#f0f0f0", size = 0.5) + #Color size of border between tiles
+  coord_equal() + # draw square instead of rectangular tiles
+  scale_x_discrete(name = NULL, position = "top") +
+  scale_y_discrete(expand = c(0, 0), name = NULL) +
+  scale_fill_distiller(
+    type = "div",
+    palette = "Blues",
+    direction = 1,
+    limits = c(-3, 19),
+    name = "min temperature (°C)",
+    guide = guide_colorbar(
+      barwidth = grid::unit(2, "in"),
+      barheight = grid::unit(0.2, "in"),
+      title.position = "top",
+      title.hjust = 0.5
+    )
+  ) +
+  theme(
+    panel.background = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text = element_text(family = font, color = text_color, size = 7),
+    legend.title = element_text(family = font, color = text_color, size = 7),
+    legend.text = element_text(family = font, color = text_color, size = 7),
+    legend.position = "top",
+    legend.justification = "right",
+    plot.margin = margin(t = 0, b = 0, r = 0, l = 0)
+  )
+```
+
+
+**Some highlights**
+
+- August is the hottest month of the year. Temperatures are high between June and September
+- Low-temperatures months include December, January, February, and March
+- Maximum temperatures range from 1°C to 31°C
+- Minimum temperatures range from -3°C to 19°C
+
+Personal opinion: Compared to other parts of Germany, the temperature range in Kiel is quite temperature. The weather is quite nice, but sometimes it can also be too windy (for a bike rider like me :D) 
+
+
+
+
+
+
+
+
+
+

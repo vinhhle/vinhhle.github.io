@@ -1,0 +1,29 @@
+---
+title: "Support vector machines"
+author:
+  - name: Vinh Hung le 
+    url: vinhhle.github.io
+date: 01/23/2020
+output: 
+  distill::distill_article:
+    toc: true
+    toc_depth: 2
+preview: https://images.pexels.com/photos/129494/pexels-photo-129494.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2
+---
+
+
+```{r warning = FALSE, message = FALSE}
+library(reticulate)
+library(palmerpenguins) #get penguine dataset
+```
+
+```{r}
+penguins
+```
+
+![](https://github.com/allisonhorst/palmerpenguins/raw/main/man/figures/culmen_depth.png)
+
+```{python}
+penguins
+```
+

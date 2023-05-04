@@ -1,0 +1,396 @@
+---
+title: "Principle component analysis: What make wines different from each other?"
+author:
+  - name: Vinh Hung le 
+    url: vinhhle.github.io
+date: 03/05/2021
+output: 
+  distill::distill_article:
+    toc: true
+    toc_depth: 2
+preview: https://images.pexels.com/photos/1283219/pexels-photo-1283219.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2
+---
+```{r warning = FALSE, message = FALSE}
+library(tidyverse)
+library(devtools)
+library(ggbiplot)
+library(reshape2) #melt()
+library(colorspace)
+library(cowplot)
+library(Stat2Data)
+library(RColorBrewer)
+library(plotly)
+
+```
+
+# The Dataset
+
+In this project, we work with the Wine Data Set from UC Irvine Machine Learning Repository.  
+
+The dataset contains **178 observations**, which result from a chemical analysis of wines derived from 3 different types.   
+
+There are **13 features** that represent 13 components in the wines. These include:       
+- Alcohol   
+- Malic Acid  
+- Ash  
+- Alcalinity of Ash  
+- Magnesium  
+- Total Phenols  
+- Flavanoids  
+- Nonflavanoid Phenols  
+- Proanthocyanins  
+- Color Intensity  
+- Hue  
+- OD280/D315 of Diluted Wines  
+- Proline  
+
+```{r}
+data(wine)
+wine$Class = wine.class
+colnames(wine) = c("Alcohol", "Malic", "Ash", "AlcAsh", "Mg", "Phenol", "Flav", 
+                   "NonFlav", "Proa", "Color", "Hue", "OD", "Proline", "Class")
+rmarkdown::paged_table(head(wine))
+```
+
+**Some questions**:
+
+1. Which component is more dominant in each class of wine?
+
+2. What is the relationship between each component? Ex: Do wines with a high level of malic acid also have a high level of manganese or a low level of flavonoid?
+
+3. Is there any redundant features, which do not reveal much about the core patterns in the dataset?
+
+A common approach to answer these questions is to draw scatterplots between each pair of features. However, since there are up to 13 variables, we need to look at 78 (13*12/2) graphs, which can be time-consuming.
+
+A simpler and better solution is a **correlogram**, which shows the correlation between each feature.
+
+```{r out.width='100%', fig.asp= 0.7, fig.align='center'}
+data <- cor(wine[,1:13])
+corre <- melt(data)
+ggplot(filter(corre, as.integer(Var1) < as.integer(Var2)), aes(Var1, Var2, fill = value, size = abs(value))) + 
+  geom_point(shape = 21, stroke = 0) + 
+  scale_x_discrete(position = "top", name = NULL, expand = c(0, 0.8)) +
+  scale_y_discrete(name = NULL, expand = c(0, 0.8)) +
+  scale_size_area(max_size = 12, limits = c(0, 1), guide = "none")+
+  scale_fill_continuous_divergingx(
+    palette = "PuOr", rev = FALSE,
+    limits = c(-1, 1),
+    breaks = c(-1, 0, 1),
+    labels = c("–1", "0", "1"),
+    name = "correlation",
+    guide = guide_colorbar(
+      direction = "horizontal",
+      label.position = "bottom",
+      title.position = "top",
+      barwidth = grid::unit(140, "pt"),
+      barheight = grid::unit(17.5, "pt"),
+      ticks.linewidth = 1
+    )
+  ) +
+  coord_fixed() +
+  labs(
+    caption = "Source: Forina, M. et al, PARVUS",
+    title = "Correlation in wine components ",
+    subtitle = "The size of circles denotes the magnitude of each correlation") +
+  theme(
+    panel.background = element_blank(),
+    axis.text = element_text(family = "Avenir Next", color = "#353D42", size = 8),
+    axis.line = element_blank(),
+    axis.ticks = element_blank(),
+    axis.ticks.length = grid::unit(3, "pt"),
+    legend.position = c(.97, .0),
+    legend.justification = c(1, 0),
+    legend.title.align = 0.5,
+    legend.text = element_text(family = "Avenir Next", color = "#353D42", size = 11),
+    legend.title = element_text(family = "Avenir Next", color = "#353D42", size = 11),
+    plot.title = element_text(family = "Avenir Next", size = 13, color = "#353d42", face = "bold"),
+    plot.subtitle = element_text(family = "Avenir Next", size = 11, color = "#353D42", hjust = 0),
+    plot.caption = element_text(family = "Avenir Next", size = 10, color = "#666666", hjust = 0)
+  )
+```
+
+Based on this graph, we may clearly see a strong positive correlation between `Phenol` and `Flav` or a strong negative correlation between `Hue` and `Malic`. However, this approach hides the underlying data points, which would lead to some incorrect conclusions. PCA is a better option to find patterns while still showing the raw data.
+
+# What is PCA?
+
+Principal component analysis or PCA is a popular technique for **dimensionality reduction** and **finding patterns** in exploratory analysis.
+
+PCA can be used to deal with the so-called **"the curse of dimensionality"**, which refers to some problems with high-dimensional datasets. These include reduced estimation accuracy, higher computational expenses to handle data, and hard interpretation.  
+
+PCA is based on an assumption that most high-dimensional datasets contain many **correlated variables that show overlapping information**. Thus, we may reduce the set to a **smaller number of important features** without affecting much core information. 
+
+Let's take a dataset of multiple physical features of students for example. Variables such as overall weight, height, lengths of legs and arms, circumferences of chest and hips, etc are typically correlated with each other. We may reduce them into a single feature called **overall size**. People with larger overall size tend to have these features higher. Other important feature can be **sex** and **age**. There are noticeable differences between the measurements of male and female or children and adults. So, from the original set of 50 or even 100 variables, we may reduce to only 3 key features that can still reveal important patterns in the data.   
+
+
+# How PCA Works 
+
+The first step in PCA is to standardize the dataset to unit variance (var = 1). This ensures that variables measured in different units contribute equally to the analysis. Otherwise, features with larger ranges may dominate those with smaller ranges.
+
+For instance, the `alcohol` variable with a range from 0-500 mg may dominate over a `phenol` variable with a range 0-10 g.
+
+The formula for standardization: $\frac{value \:-\: mean}{standard \: deviation}$
+
+Here's what the original dataset looks like after standardization.
+
+```{r}
+scaled_wine <- data.frame(scale(wine[,1:13]))
+rmarkdown::paged_table(head(scaled_wine))
+```
+
+The next step is to find the principle components, which are linear combinations of the original variables. We combine in a way that most of the variance or information of the original variables is compressed in the first principal component (PC1). Similarly, PC2 should account for the second largest amount of variation in the data.
+
+We can perform PCA in R with the `pcrcomp()` function.  
+
+```{r warning = FALSE, message = FALSE}
+pca = prcomp(wine[,1:13], scale = TRUE)
+rmarkdown::paged_table(data.frame(pca$rotation))
+```
+
+The results show the loadings, which define the direction of the principal components. For example, PC1 and PC2 can be constructed as the following form: 
+
+$PC1 = -0.144*Alcohol + 0.245*Malic + .... - 0.376*OD - 0.287*Proline$
+$PC2 = 0.484*Alcohol + 0.225*Malic + .... - 0.164*OD + 0.365*Proline$
+
+```{r warning = FALSE, message = FALSE}
+var_explained <- data.frame(PC = paste0("PC",1:13),
+                            var_explained = (pca$sdev)^2/sum((pca$sdev)^2)) 
+var_explained$PC <- factor(var_explained$PC, levels = c("PC1","PC2","PC3","PC4","PC5","PC6","PC7","PC8","PC9","PC10","PC11","PC12","PC13"))
+scree_plot <- ggplot(var_explained, aes(x = PC, y = var_explained, group = 1)) +
+  geom_line(size = 0.2) +
+  geom_col(width = 0.5, fill = "#56B4E9") + 
+  geom_point(size = 1)+
+  scale_y_continuous(expand = c(0,0), name = "explained variance") +
+  scale_x_discrete(expand = c(0,0), name = "")+
+  coord_cartesian(clip = "off") +
+  theme(
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(color = "#cbcbcb", size = 0.5),
+    axis.ticks = element_blank(),
+    axis.text = element_text(family = "Avenir Next", color = "#353d42", size = 11),
+    axis.title = element_text(family = "Avenir Next", color = "#353d42", size = 11)
+  )
+ggplotly(scree_plot)
+```
+
+The scree plot shows that PC1 and PC2 explains **36.2%** and **19.2%** of variation in the data. With the first 4 PCs, we can explain up to 73.5% of the information from the provided dataset with 13 variables.
+
+The overall PCA process can be summarized by the following graph.
+
+```{r warning = FALSE, message = FALSE, out.width='100%', fig.asp= 0.5, fig.align='center', echo = FALSE}
+p1 <- ggplot(wine, aes(Phenol, Flav, fill = Class)) + 
+  geom_point(pch = 21, color = "white", size = 2, stroke = 0.2) +
+  scale_x_continuous(
+    name = "Phenol"
+  ) +
+  scale_y_continuous(
+    name = "Flavonoid",
+    expand = c(0, 0),
+    limit = c(0.2, 4)
+  ) +
+  scale_color_brewer(name = "None", palette = "Set1") +
+  coord_fixed(ratio = 1) +
+  theme(
+    axis.ticks = element_blank(),
+    axis.text = element_text(family = "Avenir Next", size = 11, color = "#353d42"),
+    axis.title = element_text(family = "Avenir Next", size = 11, color = "#353d42"),
+    panel.background = element_rect(fill = "white"),
+    panel.grid.major = element_line(color = "#cbcbcb", size = 0.3),
+    axis.title.x = element_text(margin = margin (t = 10)),
+    plot.title = element_text(family = "Avenir Next", color = "#353d42", size = 15, face = "bold", margin = margin(b = 20)),
+    plot.caption = element_text(family = "Avenir Next", color = "#666666", size = 9, hjust = 0, vjust = 2),
+    legend.position = "top",
+    legend.justification = "right",
+    legend.box.spacing = unit(3.5, "pt"), #distance between legend and plot
+    legend.text = element_text(family = "Avenir Next", color = "#353d42", vjust = 0.6),
+    legend.spacing.x = unit(2, "pt"),
+    legend.background = element_rect(fill = "white", color = "white"),
+    legend.key.width = unit(10, "pt"),
+    legend.key = element_blank(),
+    legend.title = element_blank()
+  )
+# Plot 2
+wine_standard <- data.frame(
+  Phenol = scale(wine$Phenol),
+  Flav = scale(wine$Flav),
+  Class = wine$Class
+)
+df_arrows <- data.frame(
+  x = c(-3, 2),
+  y = c(-3, -2),
+  xend = c(3, -2),
+  yend = c(3, 2)
+)
+df_labels <- data.frame(
+  x = c(3.1, -2.1),
+  y = c(3.1, 2.1),
+  hjust = c(0, 1),
+  vjust = c(0, 0),
+  label = c("PC 1", "PC 2")
+)
+p2 <- ggplot(wine_standard, aes(Phenol, Flav, fill = Class)) + 
+  geom_point(pch = 21, color = "white", size = 2, stroke = 0.2) +
+  geom_segment(
+    data = df_arrows,
+    aes(x = x, y = y, xend = xend, yend = yend),
+    color = "black",
+    arrow = arrow(angle = 15, length = grid::unit(9, "pt"), type = "closed"),
+    inherit.aes = FALSE
+  ) +
+  geom_text(
+    data = df_labels,
+    aes(x = x, y = y, hjust = hjust, vjust = vjust, label = label),
+    size = 7/.pt,
+    family = "Avenir Next",
+    color = "#353d42", inherit.aes = FALSE
+  ) +
+  scale_x_continuous(
+    name = "phenol (scaled)",
+    limits = c(-4, 4),
+    breaks = c(-4, -2, 0, 2, 4), 
+    labels = c("-4.0", "-2.0", "0.0", "2.0", "4.0")
+  ) +
+  scale_y_continuous(
+    name = "flavonoid (scaled)",
+    limits = c(-4, 4),
+    breaks = c(-4, -2, 0, 2, 4), 
+    labels = c("-4.0", "-2.0", "0.0", "2.0", "4.0")
+  ) +
+  scale_color_brewer(name = "None", palette = "Set1") +
+  coord_fixed(ratio = 1) +
+  theme(
+    axis.ticks = element_blank(),
+    axis.text = element_text(family = "Avenir Next", size = 11, color = "#353d42"),
+    axis.title = element_text(family = "Avenir Next", size = 11, color = "#353d42"),
+    panel.background = element_rect(fill = "white"),
+    panel.grid.major = element_line(color = "#cbcbcb", size = 0.3),
+    axis.title.x = element_text(margin = margin (t = 10)),
+    plot.title = element_text(family = "Avenir Next", color = "#353d42", size = 15, face = "bold", margin = margin(b = 20)),
+    plot.caption = element_text(family = "Avenir Next", color = "#666666", size = 9, hjust = 0, vjust = 2),
+    legend.position = "none"
+  )
+# Plot 3
+df_arrows <- data.frame(
+  x = c(-5.2, 0),
+  y = c(0, -3.5),
+  xend = c(5.2, 0),
+  yend = c(0, 3.5)
+)
+df_labels <- data.frame(
+  x = c(5.2, 0),
+  y = c(0.4, 3.8),
+  hjust = c(0.9, 0.5),
+  vjust = c(0, 0),
+  label = c("PC 1", "PC 2")
+)
+p3 <- ggplot(wine_standard, aes(Phenol + Flav, -Phenol + Flav, fill = Class)) + 
+  geom_point(pch = 21, color = "white", size = 2, stroke = 0.2) +
+  geom_segment(
+    data = df_arrows,
+    aes(x = x, y = y, xend = xend, yend = yend),
+    color = "black",
+    arrow = arrow(angle = 15, length = grid::unit(9, "pt"), type = "closed"),
+    inherit.aes = FALSE
+  ) +
+  geom_text(
+    data = df_labels,
+    aes(x = x, y = y, hjust = hjust, vjust = vjust, label = label),
+    size = 7/.pt,
+    family = "Avenir Next",
+    color = "#353d42", inherit.aes = FALSE
+  ) +
+  scale_x_continuous(
+    name = "PC 1", limits = c(-5.2, 5.2),
+    breaks = c(-5, -2.5, 0, 2.5, 5), labels = c("-5.0", "-2.5", "0.0", "2.5", "5.0")
+) +
+  scale_y_continuous(
+    name = "PC 2", limits = c(-5.2, 5.2),
+    breaks = c(-5, -2.5, 0, 2.5, 5), labels = c("-5.0", "-2.5", "0.0", "2.5", "5.0")
+  ) +
+  scale_color_brewer(name = "None", palette = "Set1") +
+  coord_fixed(ratio = 1) +
+  theme(
+    axis.ticks = element_blank(),
+    axis.text = element_text(family = "Avenir Next", size = 11, color = "#353d42"),
+    axis.title = element_text(family = "Avenir Next", size = 11, color = "#353d42"),
+    panel.background = element_rect(fill = "white"),
+    panel.grid.major = element_line(color = "#cbcbcb", size = 0.3),
+    axis.title.x = element_text(margin = margin (t = 10)),
+    plot.title = element_text(family = "Avenir Next", color = "#353d42", size = 15, face = "bold", margin = margin(b = 20)),
+    plot.caption = element_text(family = "Avenir Next", color = "#666666", size = 9, hjust = 0, vjust = 2),
+    legend.position = "none"
+  )
+plot_grid(
+  p1, NULL, p2, NULL, p3,
+  nrow = 1, align = 'hv', rel_widths = c(1, .04, 1, .04, 1))
+```
+
+# Interpret PCA Results
+
+There are two things that we are interested in the results of PCA:
+
+- The composition of principal components
+
+- The locations of each data point in the principal components space
+
+Firstly, we take a look at the composition of PC1 and PC2
+
+```{r out.width='80%', fig.asp= 0.8, fig.align='center', message = FALSE, warning = FALSE}
+pca <- prcomp(wine[,1:13], scale = TRUE)
+ggbiplot(pca, alpha = 0) +
+  scale_x_continuous(name = "PC1", expand = c(0, 0.1), limits = c(-2, 1.5)) +
+  scale_y_continuous(name = "PC2", expand = c(0, 0.1), limits = c(-1, 1.5)) +
+  scale_color_manual(values = c("#0072B2")) +
+  theme(
+    panel.background = element_blank(),
+    panel.grid.major = element_line(size = 0.1, color = "#cbcbcb" ),
+    axis.text = element_text(family = "Avenir Next", color = "#353D42", size = 11),
+    axis.title = element_text(family = "Avenir Next", color = "#353D42", size = 11),
+    axis.ticks = element_blank(),
+    legend.position = "top"
+  )
+```
+
+The arrows represent how original scaled variables contribute to the PCs. They have varying lengths because there are also other PCs. Shorter arrows indicate that they may contribute more to other higher-order PCs that are not shown in this graph.
+
+We can see that PC1 is mainly contributed by non-flavonoid, alash, proa, flavonoid, and flavonoid. PC2 is mainly contributed by ash, mg, color, and alcohol. Other features contribute in varying amounts to both PC1 and PC2. Some conclusions from this graph:
+
+- Samples with high levels of malic acid also tend to have high levels of alcalinity of ash and nonflavonoid phenols 
+
+- Samples with high levels of flavonoids also tend to have high levels of proanthocyanins and phenols
+
+- Sample with high levels of malic acid, ash, and nonflavonoid phenols tend to have low levels of flavonoids, proanthocyanins, phenols, and OCD
+
+- Samples with high levels of alcohol also tend to have high levels of ash and color intensity
+
+Secondly, we examine the location of original data points in the 2D space of PC1 and PC2
+
+```{r out.width='80%', fig.asp= 0.9, fig.align='center'}
+ggbiplot(pca, group = wine.class, ellipse = TRUE) +
+  scale_x_continuous(name = "PC1", expand = c(0, 0.1)) +
+  scale_y_continuous(name = "PC2", expand = c(0, 0.1)) +
+  scale_color_brewer(name = "None", palette = "Set1") +
+  theme(
+    panel.background = element_blank(),
+    panel.grid.major = element_line(size = 0.1, color = "#cbcbcb"),
+    axis.text = element_text(family = "Avenir Next", color = "#353D42", size = 11),
+    axis.title = element_text(family = "Avenir Next", color = "#353D42", size = 11),
+    axis.ticks = element_blank(),
+    legend.position = "right",
+    legend.text = element_text(family = "Avenir Next", color = "#353D42", size = 11),
+    legend.title = element_blank(),
+    legend.background = element_rect(fill = "white", color = NA),
+    legend.key = element_blank()
+  )
+```
+
+We can easily notice defined clusters of wine classes. Some conclusions:
+
+- Barbera wines tend to have higher than average levels of malic acid, alcalinity of ash, and nonflavonoid phenols, as well as lower than average levels of flavonoids, proanthocyanins, and phenols   
+
+- Barolo wines tend to have lower than average levels of malic acid, alcalinity of ash, and nonflavonoid phenols, as well as higher than average levels of flavonoids, proanthocyanins, and phenols    
+
+- Both barolo and barbera wines tend to have higher than average levels of color intensity, ash, alcohol, and magnesium  
+
+- Grignolion wines tend to have lower than average levels of color intensity, ash, alcohol, and magnesium
+
+These results of PCA can be helpful for building a classification model to identify the class of a wine based on the contents.

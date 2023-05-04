@@ -1,0 +1,15 @@
+---
+title: "A collection of charts and plots for data visualization"
+author:
+  - name: Vinh Hung le 
+    url: vinhhle.github.io
+date: 11/11/2021
+output: 
+  distill::distill_article:
+    toc: true
+    toc_depth: 2
+preview: https://cdn.thenewstack.io/media/2023/01/285d68dd-charts-1024x581.jpg
+---
+This is a collection of graphs, charts, and maps I’ve made using R (mainly ggplot2) to show the data-viz capabilities.
+
+**[Click here to view the project](https://vinhhle.github.io/data_viz/)**
