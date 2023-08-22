@@ -10,12 +10,20 @@ navbar:
   right:
     - text: "home"
       href: index.html
-    - text: "tableau projects"
-      href: https://public.tableau.com/app/profile/vinh.hung.le7673
+    - text: "ML/AI projects"
+      href: ML-AI.html  
     - text: "data viz"
-      href: https://photos.app.goo.gl/qZs4dVRQuHwb2BTz8
-    - text: "travel"
-      href: travel.html
+      menu:
+      - text: "ggplot2"
+        href: https://photos.app.goo.gl/qZs4dVRQuHwb2BTz8
+      - text: "tableau"
+        href: https://public.tableau.com/app/profile/vinh.hung.le7673
+    - text: "photography"
+      menu:
+      - text: "my favourite shots"
+        href: https://vinhhle.github.io/photography/gallery.html
+      - text: "travel moments"
+        href: https://vinhhle.github.io/photography/travel.html
     - text: "about"
       href: about.html  
   search: true
